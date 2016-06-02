@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}書籍の一覧{% endblock title %}
+
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <h3 class="page-header">日報一覧</h3>
+    <a href="{% url 'day:book_add' %}" class="btn btn-default btn-sm">日報追加</a>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>日付</th>
+          <th>タイトル</th>
+          <!--<th>ページ数</th>-->
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td>{{ book.id }}</td>
+          <td>{{ book.name }}</td>
+          <td>{{ book.publisher }}</td>
+          <!--<td>{{ book.page }}</td>-->
+          <td>
+            <a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>
+            <a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>
+            <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+        <a href="{% url 'django.contrib.auth.views.logout' %}" class="btn btn-default btn-sm" style="position: absolute; right: 100px; top: 100px">ログアウト</a>
+    </table>
+{% endblock content %}
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
