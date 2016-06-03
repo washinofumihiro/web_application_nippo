@@ -1,16 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-
-# from day.models import Book
-# from day.forms import BookForm
 from day.models import Book, Impression
 from day.forms import BookForm, ImpressionForm
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
-# from django.shortcuts import render
-# from django.http import HttpResponse
-#
-# from day.models import Book
+# from django.contrib.auth.models import Permission
+# from django.contrib.contenttypes.models import ContentType
+
+
+
+
+
+
 
 @login_required
 def book_list(request):
@@ -21,7 +21,17 @@ def book_list(request):
                   'day/book_list.html',     # 使用するテンプレート
                   {'books': books})         # テンプレートに渡すデータ
 
+# @login_required
+# def book_browse(request):
+#     """書籍の一覧"""
+# #    return HttpResponse('書籍の一覧')
+#     books = Book.objects.all().order_by('id')
+#     return render(request,
+#                   'day/browse.html',     # 使用するテンプレート
+#                   {'books': books})         # テンプレートに渡すデータ
 
+
+@login_required
 def book_edit(request, book_id=None):
     """書籍の編集"""
 #     return HttpResponse('書籍の編集')
@@ -41,7 +51,7 @@ def book_edit(request, book_id=None):
 
     return render(request, 'day/book_edit.html', dict(form=form, book_id=book_id))
 
-
+@login_required
 def book_del(request, book_id):
     """書籍の削除"""
     #     return HttpResponse('書籍の削除')
@@ -57,6 +67,7 @@ class ImpressionList(ListView):
     template_name='day/impression_list.html'
     paginate_by = 10  # １ページは最大2件ずつでページングする
 
+    # @login_required
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, pk=kwargs['book_id'])  # 親の書籍を読む
         impressions = book.impressions.all().order_by('id')   # 書籍の子供の、感想を読む
@@ -67,7 +78,7 @@ class ImpressionList(ListView):
 
 
 
-
+@login_required
 def impression_edit(request, book_id, impression_id=None):
     """感想の編集"""
     book = get_object_or_404(Book, pk=book_id)  # 親の書籍を読む
@@ -91,7 +102,7 @@ def impression_edit(request, book_id, impression_id=None):
                   dict(form=form, book_id=book_id, impression_id=impression_id))
 
 
-
+@login_required
 def impression_del(request, book_id, impression_id):
     """感想の削除"""
     impression = get_object_or_404(Impression, pk=impression_id)
