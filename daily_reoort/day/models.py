@@ -3,9 +3,10 @@ from django.db import models
 
 class Book(models.Model):
     """書籍"""
-    name = models.CharField('書籍名', max_length=255)
-    publisher = models.CharField('出版社', max_length=255, blank=True)
-    page = models.IntegerField('ページ数', blank=True, default=0)
+    name = models.CharField('タイトル', max_length=255)
+    publisher = models.TextField('内容', blank=True)
+    # publisher = models.CharField('出版社', max_length=255, blank=True)
+    # page = models.IntegerField('ページ数', blank=True, default=0)
 
     def __str__(self):
         return self.name
