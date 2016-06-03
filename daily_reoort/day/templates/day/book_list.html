@@ -37,15 +37,24 @@ table {
           <!--<td>{{ book.contributor }}</td>-->
           <td>{{ book.id }}</td>
           <td>{{ book.name }}</td>
-          <td>{{ book.publisher }}</td>
+          <td>{{ request.user }}</td>
           <td>{{ book.page }}</td>
           <td>
-              {% if book.page %}
-            <a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>
-            <a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>
-              {% endif %}
+              <script>
+                  if(book.page == request.user){
+                    document.write('<a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>');
+                    document.write('<a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>');
+                  }
+              </script>
             <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
           </td>
+          <!--<td>-->
+              <!--{% if book.page %}-->
+            <!--<a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>-->
+            <!--<a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>-->
+              <!--{% endif %}-->
+            <!--<a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>-->
+          <!--</td>-->
         </tr>
         {% endfor %}
       </tbody>
