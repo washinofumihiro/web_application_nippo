@@ -24,6 +24,7 @@ class Book(models.Model):
     #page = models.CharField('投稿者', max_length=255)
     # publisher = models.CharField('出版社', max_length=255, blank=True)
     page = models.CharField('投稿者', max_length=255)
+    # date = models.CharField('投稿者', max_length=255)
     #page = User.username
     # page = models.IntegerField('ページ数', blank=True, default=0)
 

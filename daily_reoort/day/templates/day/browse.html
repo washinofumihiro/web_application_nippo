@@ -27,7 +27,7 @@ table {
         <tr>
           <td>{{ book.id }}</td>
           <td>{{ book.name }}</td>
-          <td>{{ book.publisher }}</td>
+          <td style="overflow : visible;">{{ book.publisher }}</td>
           <td>{{ book.page }}</td>
           <td>
             <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>

@@ -22,9 +22,9 @@ table {
           <!--<th>投稿者</th>-->
           <!--<th>操作</th>-->
           <th>ID</th>
-          <th>日付</th>
-          <th>タイトル</th>
           <th>投稿者</th>
+          <th>タイトル</th>
+          <th>内容</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -35,17 +35,18 @@ table {
           <!--<td>{{ book.date }}</td>-->
           <!--<td>{{ book.title }}</td>-->
           <!--<td>{{ book.contributor }}</td>-->
-          <td>{{ book.id }}</td>
-          <td>{{ book.name }}</td>
-          <td>{{ request.user }}</td>
+          <td >{{ book.id }}</td>
           <td>{{ book.page }}</td>
+          <td>{{ book.name }}</td>
+          <td>{{ book.publisher }}</td>
           <td>
               <script>
-                  if(book.page == request.user){
+                  if({{book.page}} == {{request.user}}){
                     document.write('<a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>');
                     document.write('<a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>');
                   }
               </script>
+            <a href="{% url 'day:book_browse' book_id=book.id %}" class="btn btn-default btn-sm">閲覧</a>
             <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
           </td>
           <!--<td>-->
@@ -61,7 +62,7 @@ table {
         <a href="{% url 'django.contrib.auth.views.logout' %}" class="btn btn-default btn-sm" style="position: absolute; right: 100px; top: 100px">ログアウト</a>
     </table>
 {% endblock content %}
-
+                  <!--if(book.page == request.user){-->
               <!--{% if book.page %}-->
               <!--{% endif %}-->
 
