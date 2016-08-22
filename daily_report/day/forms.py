@@ -13,6 +13,6 @@ class BookForm(ModelForm):
     class Meta:
         model = Book
         # fields = ('name', 'publisher', )
-        fields = ( 'page','name', 'publisher',)
-        # fields = ('date', 'title', 'contributor',)
+        fields = ( 'user','title', 'content',)
+        # fields = ('date', 'title', 'user',)
 

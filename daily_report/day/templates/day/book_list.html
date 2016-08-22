@@ -11,7 +11,7 @@ table {
 {% endblock %}
 
 {% block content %}
-    <h3 class="page-header">日報一覧</h3>
+    <h3 class="user-header">日報一覧</h3>
     <a href="{% url 'day:book_add' %}" class="btn btn-default btn-sm">日報追加</a>
     <table class="table table-striped table-bordered">
       <thead>
@@ -34,14 +34,14 @@ table {
           <!--<td>{{ book.id }}</td>-->
           <!--<td>{{ book.date }}</td>-->
           <!--<td>{{ book.title }}</td>-->
-          <!--<td>{{ book.contributor }}</td>-->
+          <!--<td>{{ book.user }}</td>-->
           <td >{{ book.id }}</td>
-          <td>{{ book.page }}</td>
-          <td>{{ book.name }}</td>
-          <td>{{ book.publisher }}</td>
+          <td>{{ book.user }}</td>
+          <td>{{ book.title }}</td>
+          <td>{{ book.content }}</td>
           <td>
               <script>
-                  if({{book.page}} == {{request.user}}){
+                  if({{book.user}} == {{request.user}}){
                     document.write('<a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>');
                     document.write('<a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>');
                   }
@@ -50,7 +50,7 @@ table {
             <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
           </td>
           <!--<td>-->
-              <!--{% if book.page %}-->
+              <!--{% if book.user %}-->
             <!--<a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>-->
             <!--<a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>-->
               <!--{% endif %}-->
@@ -59,11 +59,11 @@ table {
         </tr>
         {% endfor %}
       </tbody>
-        <a href="{% url 'django.contrib.auth.views.logout' %}" class="btn btn-default btn-sm" style="position: absolute; right: 100px; top: 100px">ログアウト</a>
+        <a href="{% url 'django.contrib.auth.views.logout' %}" class="btn btn-default btn-sm" style="position: absolute; right: 100px;">ログアウト</a>
     </table>
 {% endblock content %}
-                  <!--if(book.page == request.user){-->
-              <!--{% if book.page %}-->
+                  <!--if(book.user == request.user){-->
+              <!--{% if book.user %}-->
               <!--{% endif %}-->
 
 <!--<!DOCTYPE html>-->

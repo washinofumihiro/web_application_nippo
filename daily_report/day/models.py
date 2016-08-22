@@ -19,11 +19,11 @@ from django.contrib.auth import get_user
 
 class Book(models.Model):
     """書籍"""
-    name = models.CharField('タイトル', max_length=255)
-    publisher = models.TextField('内容', blank=True)
+    title = models.CharField('タイトル', max_length=255)
+    content = models.TextField('内容', blank=True)
     #page = models.CharField('投稿者', max_length=255)
     # publisher = models.CharField('出版社', max_length=255, blank=True)
-    page = models.CharField('投稿者', max_length=255)
+    user = models.CharField('投稿者', max_length=255)
     # date = models.CharField('投稿者', max_length=255)
     #page = User.username
     # page = models.IntegerField('ページ数', blank=True, default=0)
