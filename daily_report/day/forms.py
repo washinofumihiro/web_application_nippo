@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from day.models import Book, Impression
+from .models import Book, Impression
 
 
 class ImpressionForm(ModelForm):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from day.models import Book, Impression
+from .models import Book, Impression
 from django.contrib.auth import get_user
 # admin.site.register(Book)
 # admin.site.register(Impression)

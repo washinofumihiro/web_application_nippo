@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from day.models import Book, Impression
-from day.forms import BookForm, ImpressionForm
+from .models import Book, Impression
+from .forms import BookForm, ImpressionForm
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import Permission
