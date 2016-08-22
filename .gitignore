@@ -1,2 +1,4 @@
 .idea/*
 daily_report/.idea/*
+daily_report/daily_report/__pycache__/*
+daily_report/day/__pycache__/*
