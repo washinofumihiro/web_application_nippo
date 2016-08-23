@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}日報一覧{% endblock title %}
+
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <span><h3 class="user-header">日報一覧</h3>
+    <a href="{% url 'day:report_add' %}" class="btn btn-default btn-sm">日報追加</a>
+    <span>ようこそ！{{request.user}}さん</span>
+
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <!--<th>ID</th>-->
+          <!--<th>日付</th>-->
+          <!--<th>タイトル</th>-->
+          <!--<th>投稿者</th>-->
+          <!--<th>操作</th>-->
+          <th>ID</th>
+          <th>投稿者</th>
+          <th>タイトル</th>
+          <th>内容</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <!--<td>{{ report.id }}</td>-->
+          <!--<td>{{ report.date }}</td>-->
+          <!--<td>{{ report.title }}</td>-->
+          <!--<td>{{ report.user }}</td>-->
+          <td >{{ report.id }}</td>
+          <td>{{ report.user }}</td>
+          <td>{{ report.title }}</td>
+          <td>{{ report.content }}</td>
+          <td>
+
+                  {% if report.user == request.user.username %}
+              <script>
+                    document.write('<a href="{% url 'day:report_mod' report_id=report.id %}" class="btn btn-default btn-sm">修正</a>');
+                    document.write('<a href="{% url 'day:report_del' report_id=report.id %}" class="btn btn-default btn-sm">削除</a>');
+
+              </script>
+              {% endif %}
+            <a href="{% url 'day:report_browse' report_id=report.id %}" class="btn btn-default btn-sm">閲覧</a>
+            <a href="{% url 'day:impression_list' report_id=report.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
+          </td>
+          <!--<td>-->
+              <!--{% if report.user %}-->
+            <!--<a href="{% url 'day:report_mod' report_id=report.id %}" class="btn btn-default btn-sm">修正</a>-->
+            <!--<a href="{% url 'day:report_del' report_id=report.id %}" class="btn btn-default btn-sm">削除</a>-->
+              <!--{% endif %}-->
+            <!--<a href="{% url 'day:impression_list' report_id=report.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>-->
+          <!--</td>-->
+        </tr>
+        {% endfor %}
+      </tbody>
+        <a href="{% url 'django.contrib.auth.views.logout' %}" class="btn btn-default btn-sm" style="position: absolute; right: 100px;">ログアウト</a>
+    </table>
+{% endblock content %}
+                  <!--if(report.user == request.user){-->
+              <!--{% if report.user %}-->
+              <!--{% endif %}-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->

@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Book, Impression
+from .models import Report, Impression
 from django.contrib.auth import get_user
-# admin.site.register(Book)
+# admin.site.register(Report)
 # admin.site.register(Impression)
 
 
-class BookAdmin(admin.ModelAdmin):
+class ReportAdmin(admin.ModelAdmin):
     # list_display = ('id', 'date', 'title', 'user',)  # 一覧に出したい項目
     # # list_display = ('id', 'name', 'publisher',)  # 一覧に出したい項目
     # list_display_links = ('id', 'name',)  # 修正リンクでクリックできる項目
@@ -13,7 +13,7 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'content', 'user',)  # 一覧に出したい項目
     # list_display = ('id', 'name', 'publisher',)  # 一覧に出したい項目
     list_display_links = ('id', 'title',)  # 修正リンクでクリックできる項目
-admin.site.register(Book, BookAdmin)
+admin.site.register(Report, ReportAdmin)
 
 
 class ImpressionAdmin(admin.ModelAdmin):
@@ -22,9 +22,9 @@ class ImpressionAdmin(admin.ModelAdmin):
 admin.site.register(Impression, ImpressionAdmin)
 
 # from django.contrib import admin
-# from day.models import Book, Impression
+# from day.models import Report, Impression
 #
-# admin.site.register(Book)
+# admin.site.register(Report)
 # admin.site.register(Impression)
 
 

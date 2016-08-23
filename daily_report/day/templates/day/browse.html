@@ -23,19 +23,19 @@ table {
         </tr>
       </thead>
       <tbody>
-        {% for book in books %}
+        {% for report in reports %}
         <tr>
-          <td>{{ book.id }}</td>
-          <td>{{ book.name }}</td>
-          <td style="overflow : visible;">{{ book.publisher }}</td>
-          <td>{{ book.page }}</td>
+          <td>{{ report.id }}</td>
+          <td>{{ report.name }}</td>
+          <td style="overflow : visible;">{{ report.publisher }}</td>
+          <td>{{ report.page }}</td>
           <td>
-            <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
+            <a href="{% url 'day:impression_list' report_id=report.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
           </td>
         </tr>
         {% endfor %}
       </tbody>
-    <a href="{% url 'day:book_list' %}" class="btn btn-default btn-sm">戻る</a>
+    <a href="{% url 'day:report_list' %}" class="btn btn-default btn-sm">戻る</a>
     </table>
 {% endblock content %}
 

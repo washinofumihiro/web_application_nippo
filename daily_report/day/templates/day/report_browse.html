@@ -1,0 +1,61 @@
+
+
+
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}内容確認{% endblock title %}
+
+{% block content %}
+    <h3 class="page-header">日報の内容</h3>
+    {% if report_id %}
+    <!--<select>-->
+    <form action="{% url 'day:report_mod' report_id=report_id %}" method="post" class="form-horizontal" role="form">
+
+    <!--</select>-->
+    {% else %}
+    <form action="{% url 'day:report_add' %}" method="post" class="form-horizontal" role="form">
+    {% endif %}
+      {% csrf_token %}
+      {{ form|bootstrap_horizontal }}
+      <div class="form-group">
+          <script>
+              document.getElementById("id_name").disabled = true;
+              document.getElementById("id_publisher").disabled = true;
+              document.getElementById("id_page").disabled = true;
+          </script>
+        <!--<div class="col-sm-offset-2 col-sm-10">-->
+          <!--<button type="submit" class="btn btn-primary">保存</button>-->
+        <!--</div>-->
+      </div>
+    </form>
+    <a href="{% url 'day:report_list' %}" class="btn btn-default btn-sm">戻る</a>
+{% endblock content %}
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->

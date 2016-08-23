@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 
 
 
-class Book(models.Model):
+class Report(models.Model):
     """書籍"""
     title = models.CharField('タイトル', max_length=255)
     content = models.TextField('内容', blank=True)
@@ -29,7 +29,7 @@ class Book(models.Model):
         return self.name
 
 
-# class Book(models.Model):
+# class Report(models.Model):
 #     """書籍"""
 #     date = models.CharField('日付', max_length = 20)
 #     title = models.CharField('タイトル', max_length=255)
@@ -47,7 +47,7 @@ class Book(models.Model):
 
 class Impression(models.Model):
     """感想"""
-    book = models.ForeignKey(Book, verbose_name='書籍', related_name='impressions')
+    report = models.ForeignKey(Report, verbose_name='書籍', related_name='impressions')
     comment = models.TextField('コメント', blank=True)
 
     def __str__(self):

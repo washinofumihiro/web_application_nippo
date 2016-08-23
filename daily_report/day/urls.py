@@ -6,14 +6,14 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     # 書籍
-    url(r'^book/$', views.book_list, name='book_list'),   # 一覧
-    url(r'^book/add/$', views.book_edit, name='book_add'),  # 登録
-    url(r'^book/mod/(?P<book_id>\d+)/$', views.book_edit, name='book_mod'),  # 修正
-    url(r'^book/del/(?P<book_id>\d+)/$', views.book_del, name='book_del'),   # 削除
-    url(r'^book/browse/(?P<book_id>\d+)/$', views.book_browse, name='book_browse'),  # 閲覧
-    url(r'^impression/(?P<book_id>\d+)/$', views.ImpressionList.as_view(), name='impression_list'),  # 一覧
-    url(r'^impression/add/(?P<book_id>\d+)/$', views.impression_edit, name='impression_add'),        # 登録
-    url(r'^impression/mod/(?P<book_id>\d+)/(?P<impression_id>\d+)/$', views.impression_edit, name='impression_mod'),  # 修正
-    url(r'^impression/del/(?P<book_id>\d+)/(?P<impression_id>\d+)/$', views.impression_del, name='impression_del'),
+    url(r'^report/$', views.report_list, name='report_list'),   # 一覧
+    url(r'^report/add/$', views.report_edit, name='report_add'),  # 登録
+    url(r'^report/mod/(?P<report_id>\d+)/$', views.report_edit, name='report_mod'),  # 修正
+    url(r'^report/del/(?P<report_id>\d+)/$', views.report_del, name='report_del'),   # 削除
+    url(r'^report/browse/(?P<report_id>\d+)/$', views.report_browse, name='report_browse'),  # 閲覧
+    url(r'^impression/(?P<report_id>\d+)/$', views.ImpressionList.as_view(), name='impression_list'),  # 一覧
+    url(r'^impression/add/(?P<report_id>\d+)/$', views.impression_edit, name='impression_add'),        # 登録
+    url(r'^impression/mod/(?P<report_id>\d+)/(?P<impression_id>\d+)/$', views.impression_edit, name='impression_mod'),  # 修正
+    url(r'^impression/del/(?P<report_id>\d+)/(?P<impression_id>\d+)/$', views.impression_del, name='impression_del'),
 ]
 

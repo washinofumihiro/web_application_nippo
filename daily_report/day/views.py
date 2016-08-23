@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Book, Impression
-from .forms import BookForm, ImpressionForm
+from .models import Report, Impression
+from .forms import ReportForm, ImpressionForm
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -73,81 +73,81 @@ def create_user(request):
 
 
 @login_required
-def book_list(request):
+def report_list(request):
     """書籍の一覧"""
 #    return HttpResponse('書籍の一覧')
-    books = Book.objects.all().order_by('id')
+    reports = Report.objects.all().order_by('id')
     return render(request,
-                  'day/book_list.html',     # 使用するテンプレート
-                  {'books': books})         # テンプレートに渡すデータ
+                  'day/report_list.html',     # 使用するテンプレート
+                  {'reports': reports})         # テンプレートに渡すデータ
 
 # @login_required
-# def book_browse(request):
+# def report_browse(request):
 #     """書籍の一覧"""
 # #    return HttpResponse('書籍の一覧')
-#     books = Book.objects.all().order_by('id')
+#     reports = Report.objects.all().order_by('id')
 #     return render(request,
 #                   'day/browse.html',     # 使用するテンプレート
-#                   {'books': books})         # テンプレートに渡すデータ
+#                   {'reports': reports})         # テンプレートに渡すデータ
 
 
 @login_required
-def book_edit(request, book_id=None):
+def report_edit(request, report_id=None):
     """書籍の編集"""
 #     return HttpResponse('書籍の編集')
-    if book_id:   # book_id が指定されている (修正時)
-        book = get_object_or_404(Book, pk=book_id)
-        if book.user != request.user.username:
-            print(book.user)
+    if report_id:   # report_id が指定されている (修正時)
+        report = get_object_or_404(Report, pk=report_id)
+        if report.user != request.user.username:
+            print(report.user)
             print(request.user)
             print("あなたが投稿した日報でありません。")
-            return render(request, 'day/book_list.html', {'books': Book.objects.all().order_by('id')})
-    else:         # book_id が指定されていない (追加時)
-        book = Book()
-        book.user = request.user.username
+            return render(request, 'day/report_list.html', {'reports': Report.objects.all().order_by('id')})
+    else:         # report_id が指定されていない (追加時)
+        report = Report()
+        report.user = request.user.username
 
 
 
     if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)  # POST された request データからフォームを作成
+        form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
-            book = form.save(commit=False)
-            book.save()
-            return redirect('day:book_list')
+            report = form.save(commit=False)
+            report.save()
+            return redirect('day:report_list')
     else:    # GET の時
-        form = BookForm(instance=book)  # book インスタンスからフォームを作成
+        form = ReportForm(instance=report)  # report インスタンスからフォームを作成
 
-    return render(request, 'day/book_edit.html', dict(form=form, book_id=book_id))
+    return render(request, 'day/report_edit.html', dict(form=form, report_id=report_id))
 
 
 @login_required
-def book_browse(request, book_id=None):
+def report_browse(request, report_id=None):
     """書籍の編集"""
 #     return HttpResponse('書籍の編集')
-    if book_id:   # book_id が指定されている (修正時)
-        book = get_object_or_404(Book, pk=book_id)
-    else:         # book_id が指定されていない (追加時)
-        book = Book()
+    if report_id:   # report_id が指定されている (修正時)
+        report = get_object_or_404(Report, pk=report_id)
+    else:         # report_id が指定されていない (追加時)
+        report = Report()
 
     if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)  # POST された request データからフォームを作成
+        form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
-            book = form.save(commit=False)
-            book.save()
-            return redirect('day:book_list')
+            report = form.save(commit=False)
+            report.save()
+            return redirect('day:report_list')
     else:    # GET の時
-        form = BookForm(instance=book)  # book インスタンスからフォームを作成
+        form = ReportForm(instance=report)  # report インスタンスからフォームを作成
 
-    return render(request, 'day/book_browse.html', dict(form=form, book_id=book_id))
+    return render(request, 'day/report_browse.html', dict(form=form, report_id=report_id))
 
 
 @login_required
-def book_del(request, book_id):
+def report_del(request, report_id):
     """書籍の削除"""
     #     return HttpResponse('書籍の削除')
-    book = get_object_or_404(Book, pk=book_id)
-    book.delete()
-    return redirect('day:book_list')
+    report = get_object_or_404(Report, pk=report_id)
+    report.delete()
+    return redirect('day:report_list')
 
 
 
@@ -159,19 +159,19 @@ class ImpressionList(ListView):
 
     # @login_required
     def get(self, request, *args, **kwargs):
-        book = get_object_or_404(Book, pk=kwargs['book_id'])  # 親の書籍を読む
-        impressions = book.impressions.all().order_by('id')   # 書籍の子供の、感想を読む
+        report = get_object_or_404(Report, pk=kwargs['report_id'])  # 親の書籍を読む
+        impressions = report.impressions.all().order_by('id')   # 書籍の子供の、感想を読む
         self.object_list = impressions
 
-        context = self.get_context_data(object_list=self.object_list, book=book)
+        context = self.get_context_data(object_list=self.object_list, report=report)
         return self.render_to_response(context)
 
 
 
 @login_required
-def impression_edit(request, book_id, impression_id=None):
+def impression_edit(request, report_id, impression_id=None):
     """感想の編集"""
-    book = get_object_or_404(Book, pk=book_id)  # 親の書籍を読む
+    report = get_object_or_404(Report, pk=report_id)  # 親の書籍を読む
     if impression_id:   # impression_id が指定されている (修正時)
         impression = get_object_or_404(Impression, pk=impression_id)
     else:               # impression_id が指定されていない (追加時)
@@ -181,21 +181,21 @@ def impression_edit(request, book_id, impression_id=None):
         form = ImpressionForm(request.POST, instance=impression)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
             impression = form.save(commit=False)
-            impression.book = book  # この感想の、親の書籍をセット
+            impression.report = report  # この感想の、親の書籍をセット
             impression.save()
-            return redirect('day:impression_list', book_id=book_id)
+            return redirect('day:impression_list', report_id=report_id)
     else:    # GET の時
         form = ImpressionForm(instance=impression)  # impression インスタンスからフォームを作成
 
     return render(request,
                   'day/impression_edit.html',
-                  dict(form=form, book_id=book_id, impression_id=impression_id))
+                  dict(form=form, report_id=report_id, impression_id=impression_id))
 
 
 @login_required
-def impression_del(request, book_id, impression_id):
+def impression_del(request, report_id, impression_id):
     """感想の削除"""
     impression = get_object_or_404(Impression, pk=impression_id)
     impression.delete()
-    return redirect('day:impression_list', book_id=book_id)
+    return redirect('day:impression_list', report_id=report_id)
 
