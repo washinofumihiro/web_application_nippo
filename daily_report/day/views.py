@@ -3,12 +3,73 @@ from .models import Book, Impression
 from .forms import BookForm, ImpressionForm
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
 # from django.contrib.auth.models import Permission
 # from django.contrib.contenttypes.models import ContentType
+# from .forms import RegisterForm
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.shortcuts import redirect
 
 
+# @require_GET
+# def _new(request):
+#     form = CustomUserCreationForm()
+#     c = {'form': form}
+#     c.update(csrf(request))
+#     return render_to_response('three/user_new.html', c, mimetype='text/html'
+
+# def registor(request):
+#     form = UserForm()
+#     return render(request,'day/registor.html', {'fom':form})
 
 
+# def regist(request):
+#     form = RegisterForm(request.POST or None)
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'day/regist.html', context)
+#
+# @require_POST
+# def regist_save(request):
+#     form = RegisterForm(request.POST)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('day:index')
+#
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'main/regist.html', context)
+#
+#
+# def index(request):
+#     context = {
+#         'user': request.user,
+#     }
+#     return render(request, 'day/index.html', context)
+#
+
+def index(request):
+    return render_to_response('day/login.html', {},
+            context_instance=RequestContext(request))
+
+
+def register(request):
+    return render_to_response('day/register.html', {},
+            context_instance=RequestContext(request))
+
+
+def create_user(request):
+    user_id = request.POST['user_id']
+    password = request.POST['password']
+
+    new_user = User.objects.create_user(user_id, None, password)
+    new_user.save()
+
+    return redirect('/')
 
 
 
@@ -37,8 +98,15 @@ def book_edit(request, book_id=None):
 #     return HttpResponse('書籍の編集')
     if book_id:   # book_id が指定されている (修正時)
         book = get_object_or_404(Book, pk=book_id)
+        if "book.user" != "request.user":
+            print(book.user)
+            print(request.user)
+            print("あなたが投稿した日報でありません。")
+            return render(request, 'day/book_list.html', {'books': Book.objects.all().order_by('id')})
     else:         # book_id が指定されていない (追加時)
         book = Book()
+
+
 
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)  # POST された request データからフォームを作成

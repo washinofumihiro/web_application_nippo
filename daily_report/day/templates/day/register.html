@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<head><meta charset="UTF-8"></head>
+<body>
+  <h3>ユーザ登録</h3>
+  <form method="post" action="create_user">{% csrf_token %}
+    User ID: <input type="text" name="user_id" />
+    <br />
+    Password: <input type="password" name="password" />
+    <br />
+    <input type="submit" value="Register" />
+  </form>
+</body>
+</html>
