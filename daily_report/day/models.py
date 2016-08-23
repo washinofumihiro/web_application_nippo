@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 # from daily_report.daily_report import settings
-from django.contrib.auth import get_user
+# from django.contrib.auth import get_user
+# from user_auth import settings
+
 
 #ユーザー情報
 # def get_user(request):
@@ -21,12 +23,7 @@ class Book(models.Model):
     """書籍"""
     title = models.CharField('タイトル', max_length=255)
     content = models.TextField('内容', blank=True)
-    #page = models.CharField('投稿者', max_length=255)
-    # publisher = models.CharField('出版社', max_length=255, blank=True)
     user = models.CharField('投稿者', max_length=255)
-    # date = models.CharField('投稿者', max_length=255)
-    #page = User.username
-    # page = models.IntegerField('ページ数', blank=True, default=0)
 
     def __str__(self):
         return self.name

@@ -11,8 +11,10 @@ table {
 {% endblock %}
 
 {% block content %}
-    <h3 class="user-header">日報一覧</h3>
+    <span><h3 class="user-header">日報一覧</h3>
     <a href="{% url 'day:book_add' %}" class="btn btn-default btn-sm">日報追加</a>
+    <span>ようこそ！{{request.user}}さん</span>
+
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -40,12 +42,14 @@ table {
           <td>{{ book.title }}</td>
           <td>{{ book.content }}</td>
           <td>
+
+                  {% if book.user == request.user.username %}
               <script>
-                  if({{book.user}} == {{request.user}}){
                     document.write('<a href="{% url 'day:book_mod' book_id=book.id %}" class="btn btn-default btn-sm">修正</a>');
                     document.write('<a href="{% url 'day:book_del' book_id=book.id %}" class="btn btn-default btn-sm">削除</a>');
-                  }
+
               </script>
+              {% endif %}
             <a href="{% url 'day:book_browse' book_id=book.id %}" class="btn btn-default btn-sm">閲覧</a>
             <a href="{% url 'day:impression_list' book_id=book.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
           </td>

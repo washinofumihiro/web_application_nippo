@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 # from .forms import RegisterForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.shortcuts import redirect
 
 
 # @require_GET
@@ -98,13 +97,14 @@ def book_edit(request, book_id=None):
 #     return HttpResponse('書籍の編集')
     if book_id:   # book_id が指定されている (修正時)
         book = get_object_or_404(Book, pk=book_id)
-        if "book.user" != "request.user":
+        if book.user != request.user.username:
             print(book.user)
             print(request.user)
             print("あなたが投稿した日報でありません。")
             return render(request, 'day/book_list.html', {'books': Book.objects.all().order_by('id')})
     else:         # book_id が指定されていない (追加時)
         book = Book()
+        book.user = request.user.username
 
 
 
