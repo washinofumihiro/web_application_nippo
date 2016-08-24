@@ -6,7 +6,7 @@ class ImpressionForm(ModelForm):
     """感想のフォーム"""
     class Meta:
         model = Impression
-        fields = ('comment', )
+        fields = ('comment_user', 'comment',)
 
 class ReportForm(ModelForm):
     """書籍のフォーム"""
@@ -14,7 +14,7 @@ class ReportForm(ModelForm):
         model = Report
         # fields = ('name', 'publisher', )
         # fields = ( 'user','title', 'content')
-        fields = ( 'user','title', 'content','user_login_time')
+        fields = ( 'user','title', 'content')
         # fields = ( 'user','title', 'content', 'user_login_time', 'user_post_time')
         # fields = ('date', 'title', 'user',)
 

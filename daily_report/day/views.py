@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from datetime import datetime
+from django.forms.models import modelformset_factory
+
 
 
 # @require_GET
@@ -108,20 +110,23 @@ def report_edit(request, report_id=None):
     else:         # report_id が指定されていない (追加時)
         report = Report()
         report.user = request.user.username
-        report.user_login_time = datetime(*date_object.timetuple()[:6])
-        # report.user_login_time =
 
     print(report.user)
-    print(report.user_login_time)
+    print(report.user_post_time)
 
     if request.method == 'POST':
         form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
             report = form.save(commit=False)
+            report.user_post_time = datetime(*date_object.timetuple()[:6])
             report.save()
             return redirect('day:report_list')
     else:    # GET の時
         form = ReportForm(instance=report)  # report インスタンスからフォームを作成
+        # inst = modelformset_factory(Report, exclude=('title',))
+        # form = ReportForm(instance=inst)
+        # form = ReportViewForm  # report インスタンスからフォームを作成
+
 
     return render(request, 'day/report_edit.html', dict(form=form, report_id=report_id))
 
@@ -177,17 +182,20 @@ class ImpressionList(ListView):
 @login_required
 def impression_edit(request, report_id, impression_id=None):
     """感想の編集"""
+    date_object = datetime.now()
     report = get_object_or_404(Report, pk=report_id)  # 親の書籍を読む
     if impression_id:   # impression_id が指定されている (修正時)
         impression = get_object_or_404(Impression, pk=impression_id)
     else:               # impression_id が指定されていない (追加時)
         impression = Impression()
+        impression.comment_user = request.user.username
 
     if request.method == 'POST':
         form = ImpressionForm(request.POST, instance=impression)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
             impression = form.save(commit=False)
             impression.report = report  # この感想の、親の書籍をセット
+            impression.comment_time = datetime(*date_object.timetuple()[:6])
             impression.save()
             return redirect('day:impression_list', report_id=report_id)
     else:    # GET の時

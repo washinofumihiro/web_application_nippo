@@ -27,7 +27,7 @@ class Report(models.Model):
     title = models.CharField('タイトル', max_length=255)
     content = models.TextField('内容', blank=True)
     user = models.CharField('投稿者', max_length=255)
-    user_login_time = models.CharField('最終ログイン時間', max_length=100)
+    user_post_time = models.CharField('投稿時間', max_length=255)
 
     date_object = datetime.now()
     # user_login_time = models.CharField('最終ログイン時間', max_length=100,default=date_data)
@@ -56,8 +56,10 @@ class Report(models.Model):
 
 class Impression(models.Model):
     """感想"""
-    report = models.ForeignKey(Report, verbose_name='書籍', related_name='impressions')
+    report = models.ForeignKey(Report, verbose_name='日報', related_name='impressions')
     comment = models.TextField('コメント', blank=True)
+    comment_user = models.CharField('コメント投稿者', max_length=255)
+    comment_time = models.CharField('コメント時間', max_length=255)
 
     def __str__(self):
         return self.comment
