@@ -13,6 +13,8 @@ class ReportForm(ModelForm):
     class Meta:
         model = Report
         # fields = ('name', 'publisher', )
-        fields = ( 'user','title', 'content',)
+        # fields = ( 'user','title', 'content')
+        fields = ( 'user','title', 'content','user_login_time')
+        # fields = ( 'user','title', 'content', 'user_login_time', 'user_post_time')
         # fields = ('date', 'title', 'user',)
 

@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 # from .forms import RegisterForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from datetime import datetime
 
 
 # @require_GET
@@ -95,6 +96,8 @@ def report_list(request):
 def report_edit(request, report_id=None):
     """書籍の編集"""
 #     return HttpResponse('書籍の編集')
+    date_object = datetime.now()
+
     if report_id:   # report_id が指定されている (修正時)
         report = get_object_or_404(Report, pk=report_id)
         if report.user != request.user.username:
@@ -105,8 +108,11 @@ def report_edit(request, report_id=None):
     else:         # report_id が指定されていない (追加時)
         report = Report()
         report.user = request.user.username
+        report.user_login_time = datetime(*date_object.timetuple()[:6])
+        # report.user_login_time =
 
-
+    print(report.user)
+    print(report.user_login_time)
 
     if request.method == 'POST':
         form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
