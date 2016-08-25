@@ -11,10 +11,21 @@ table {
 {% endblock %}
 
 {% block content %}
-    <span><h3 class="user-header">日報一覧</h3>
+    <h3 class="user-header">日報一覧</h3>
     <a href="{% url 'day:report_add' %}" class="btn btn-default btn-sm">日報追加</a>
     <span>ようこそ！{{request.user.username}}さん</span>
-
+    <form action="{% url 'day:report_search' %}" method="post" class="form-horizontal" role="form">
+      {% csrf_token %}
+        {{form.Search}}
+        <input id='check1' type="checkbox" name="search_form" value="user_post_time">日時
+        <input id='check2' type="checkbox" name="search_form" value="user">投稿者
+        <input id='check3' type="checkbox" name="search_form" value="title">タイトル
+        <input id='check4' type="checkbox" name="search_form" value="content">内容
+        <button type="submit" class="btn btn-primary">検索</button>
+    </form>
+    {% if word %}
+        <a href="{% url 'day:report_list' %}" class="btn btn-default btn-sm">戻る</a>
+    {% endif %}
     <table class="table table-striped table-bordered">
       <thead>
         <tr>

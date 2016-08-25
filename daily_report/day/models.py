@@ -29,6 +29,7 @@ class Report(models.Model):
     user = models.CharField('投稿者', max_length=255)
     user_post_time = models.CharField('投稿時間', max_length=255)
 
+
     date_object = datetime.now()
     # user_login_time = models.CharField('最終ログイン時間', max_length=100,default=date_data)
     # user_post_time = models.CharField('投稿時間', max_length=100)
@@ -64,5 +65,10 @@ class Impression(models.Model):
     def __str__(self):
         return self.comment
 
+# class Search(models.Model):
+#     search_keyword = models.CharField('検索ワード', max_length=255)
+#
+#     def __str__(self):
+#         return self.name
 
 

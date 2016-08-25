@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Report, Impression
-from .forms import ReportForm, ImpressionForm
+from .forms import ReportForm, ImpressionForm, SearchForm
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -80,9 +80,11 @@ def report_list(request):
     """書籍の一覧"""
 #    return HttpResponse('書籍の一覧')
     reports = Report.objects.all().order_by('id')
+    form = SearchForm()
+    # print(form)
     return render(request,
                   'day/report_list.html',     # 使用するテンプレート
-                  {'reports': reports})         # テンプレートに渡すデータ
+                  {'reports': reports,'form': form})         # テンプレートに渡すデータ
 
 # @login_required
 # def report_browse(request):
@@ -110,9 +112,18 @@ def report_edit(request, report_id=None):
     else:         # report_id が指定されていない (追加時)
         report = Report()
         report.user = request.user.username
+    # print(report.user)
+    # print(report.user_post_time)
 
-    print(report.user)
-    print(report.user_post_time)
+    # data = Report.objects.get(id=30)
+    # print(data)
+    # print(reports.user)
+
+    # data = get_object_or_404(Report)
+    # for test in data:
+    #     if test.user == request.user.username:
+    #         print("succes")
+    #         # print(test.objects.all().order_by('id'))
 
     if request.method == 'POST':
         form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
@@ -213,3 +224,54 @@ def impression_del(request, report_id, impression_id):
     impression.delete()
     return redirect('day:impression_list', report_id=report_id)
 
+
+
+
+#検索フォームの作成
+def report_search(request):
+    # report = get_object_or_404(Report)
+    # print(report)
+    # if report.user != request.user.username:
+    #     print(report.user)
+    #     print(request.user)
+    #     print("あなたが投稿した日報でありません。")
+    #     return render(request, 'day/report_list.html', {'reports': Report.objects.all().order_by('id')})
+
+    # query = "iii"
+    if request.method == 'POST':
+        # print(request.POST)
+        #form = request.POST['Search']
+        # print(form)
+        # print(form[''])
+
+        form = SearchForm(request.POST)
+        # print(request.POST)
+        # print(form)
+        reports = Report.objects.all().order_by('id')
+
+        if form.is_valid():
+            # print(form.cleaned_data["Search"])
+            # print(request.POST['Search'])
+            # keyword = request.POST['Search'].split()
+            # print(keyword)
+            for data in request.POST.getlist('search_form'):
+                if data == 'user_post_time':
+                    reports = reports.filter(user_post_time__icontains=form.cleaned_data["Search"]).order_by('id')
+                elif data == 'user':
+                    reports = reports.filter(user__icontains=form.cleaned_data["Search"]).order_by('id')
+                elif data == 'title':
+                    reports = reports.filter(title__icontains=form.cleaned_data["Search"]).order_by('id')
+                elif data == 'content':
+                    reports = reports.filter(content__icontains=form.cleaned_data["Search"]).order_by('id')
+
+            # reports = Report.objects.filter(user = form.cleaned_data["Search"]).order_by('id')
+
+            return render(request,
+                      'day/report_list.html',     # 使用するテンプレート
+                      {'reports': reports, 'form': form, 'word':request.POST['Search']})         # テンプレートに渡すデータ
+
+        else:#入力がない場合
+            reports = Report.objects.all().order_by('id')
+            return render(request,
+                      'day/report_list.html',  # 使用するテンプレート
+                      {'reports': reports, 'form': form})  # テンプレートに渡すデータ
