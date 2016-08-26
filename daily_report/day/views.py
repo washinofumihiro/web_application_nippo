@@ -12,7 +12,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from datetime import datetime
 from django.forms.models import modelformset_factory
-
+from django.db.models import Q
 
 
 # @require_GET
@@ -252,17 +252,81 @@ def report_search(request):
         if form.is_valid():
             # print(form.cleaned_data["Search"])
             # print(request.POST['Search'])
-            # keyword = request.POST['Search'].split()
+            keyword = request.POST['Search'].split()
             # print(keyword)
-            for data in request.POST.getlist('search_form'):
-                if data == 'user_post_time':
-                    reports = reports.filter(user_post_time__icontains=form.cleaned_data["Search"]).order_by('id')
-                elif data == 'user':
-                    reports = reports.filter(user__icontains=form.cleaned_data["Search"]).order_by('id')
-                elif data == 'title':
-                    reports = reports.filter(title__icontains=form.cleaned_data["Search"]).order_by('id')
-                elif data == 'content':
-                    reports = reports.filter(content__icontains=form.cleaned_data["Search"]).order_by('id')
+
+
+            # チェックボックスにチェックがある場合はキーワードから各カラムを検索
+            if request.POST.getlist('search_form'):
+                query = Q()
+                for data in request.POST.getlist('search_form'):
+                    if data == 'user_post_time':
+                        queries = [Q(user_post_time__icontains=word) for word in keyword]
+                        # query = queries.pop(0)
+                        for item in queries:
+                            query |= item
+                        # reports = Report.objects.filter(query)
+
+                    elif data == 'user':
+                        queries = [Q(user__icontains=word) for word in keyword]
+                        # query = queries.pop(0)
+                        for item in queries:
+                            query |= item
+                        # reports = Report.objects.filter(query)
+
+                    elif data == 'title':
+                        queries = [Q(title__icontains=word) for word in keyword]
+                        # query = queries.pop(0)
+                        for item in queries:
+                            query |= item
+                        # reports = Report.objects.filter(query)
+
+                    elif data == 'content':
+                        queries = [Q(content__icontains=word) for word in keyword]
+                        # query = queries.pop(0)
+                        for item in queries:
+                            query |= item
+                        # reports = Report.objects.filter(query)
+                reports = Report.objects.filter(query).order_by('id')
+
+
+            # チェックボックスにチェックがない場合はキーワードからDB内全検索
+            else:
+                queries1 = [Q(user_post_time__icontains=word) for word in keyword]
+                queries2 = [Q(user__icontains=word) for word in keyword]
+                queries3 = [Q(title__icontains=word) for word in keyword]
+                queries4 = [Q(content__icontains=word) for word in keyword]
+
+                query = queries1.pop(0)
+
+                # print(query)
+                # print()
+                # print(queries1)
+                # print()
+
+                for item in queries1:
+                    query |= item
+                for item in queries2:
+                    query |= item
+                for item in queries3:
+                    query |= item
+                for item in queries4:
+                    query |= item
+
+                # print(query)
+                # print()
+                reports = Report.objects.filter(query).order_by('id')
+
+            #
+            # for data in request.POST.getlist('search_form'):
+            #     if data == 'user_post_time':
+            #         reports = reports.filter(user_post_time__icontains=form.cleaned_data["Search"]).order_by('id')
+            #     elif data == 'user':
+            #         reports = reports.filter(user__icontains=form.cleaned_data["Search"]).order_by('id')
+            #     elif data == 'title':
+            #         reports = reports.filter(title__icontains=form.cleaned_data["Search"]).order_by('id')
+            #     elif data == 'content':
+            #         reports = reports.filter(content__icontains=form.cleaned_data["Search"]).order_by('id')
 
             # reports = Report.objects.filter(user = form.cleaned_data["Search"]).order_by('id')
 
