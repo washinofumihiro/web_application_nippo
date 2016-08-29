@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <head><meta charset="UTF-8"></head>
+{% if error_word %}
+<p>{{ error_word }}</p>
+{% endif %}
 <body>
   <h3>ユーザ登録</h3>
   <form method="post" action="create_user">{% csrf_token %}
@@ -9,5 +12,6 @@
     <br />
     <input type="submit" value="Register" />
   </form>
+  <a href="/">ログイン画面に戻る</a>
 </body>
 </html>
