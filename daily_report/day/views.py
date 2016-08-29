@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response
 from datetime import datetime
 from django.forms.models import modelformset_factory
 from django.db.models import Q
+from django.db import IntegrityError
 
 
 # @require_GET
@@ -68,11 +69,21 @@ def create_user(request):
     user_id = request.POST['user_id']
     password = request.POST['password']
 
-    new_user = User.objects.create_user(user_id, None, password)
-    new_user.save()
+    try:
+        new_user = User.objects.create_user(user_id, None, password)
+        new_user.save()
+    except ValueError:
+
+        error_word = 'User IDが空白です。User IDを入力してください。'
+        # print(error_word)
+        return render(request, 'day/register.html', {'error_word': error_word})
+
+    except IntegrityError:
+        error_word = 'すでに存在しているUser IDです。別のUser IDに変更してください。'
+    return render(request, 'day/register.html', {'error_word': error_word})
+
 
     return redirect('/')
-
 
 
 @login_required
