@@ -45,41 +45,39 @@ class ReportTest(TestCase):
 
         #設定するIDとパスワード
         user_id = 'user'
+        user_id2 = 'user2'
         password = '1234'
+        null_password = ''
 
         #ユーザの作成
         new_user = User.objects.create_user(user_id, None, password)
+        new_user = User.objects.create_user(user_id2, None, null_password)
         new_user.save()
 
         #作成したユーザ情報を呼び出し
         saved_user = User.objects.all()
         actual_user = saved_user[0]
+        actual_user2 = saved_user[1]
 
         #作成したユーザのIDとパスワードが一致しているか確認
+        #ID、パスワード共に入力されたとき
         self.assertEquals(actual_user.username,user_id)
         self.assertTrue(actual_user.check_password(password))
 
+        #IDは入力され、パスワードが入力されなかったとき
+        self.assertEquals(actual_user2.username, user_id2)
+        self.assertTrue(actual_user2.check_password(null_password))
 
-    #入力がない場合、ユーザーが作成されないかどうか
-    # def test_not_make_user(self):
+    #IDに入力がない場合、ユーザーが作成されないかどうか
+    def test_not_make_user(self):
         #設定するIDとパスワード
-        # true_user_id = 'user'
-        # true_password = '1234'
-        # null_user_id = ''
-        # null_password = ''
+        true_user_id = 'user'
+        true_password = '1234'
+        null_user_id = ''
+        null_password = ''
 
         #ユーザの作成
-        # new_user = User.objects.create_user(null_user_id, None, null_password)
-        # new_user = User.objects.create_user(null_user_id, None, None)
-        # new_user.save()
-        # self.assertRaises(ValueError,User.objects.create_user(null_user_id, None, None))
-        # print(User.objects.create_user(null_user_id, None, None))
-
-        #ユーザが作成できないかどうかを確認
-        # self.assertTrue(new_user.is_active)
-        # print(new_user.is_active)
-
-
+        self.assertRaises(ValueError, lambda: User.objects.create_user(null_user_id, None,null_password))
 
     #作成したユーザがログインできるかどうか
     def test_login(self):
@@ -96,15 +94,22 @@ class ReportTest(TestCase):
         #作成したユーザでログインできるかを確認
         client_user = Client()
         self.assertTrue(client_user.login(username = user_id, password = password))
-        # print(client_user.login(username = user_id, password = password))
-
-        # client_user.login(username = user_id, password = password)
-        # client_user.login(self.request,new_user)
-        # print(client_user.login(username = new_user.username, password = new_user.password))
-        # print('aaaa')
-
 
     #異なるID、パスワードでログインできないかどうか
+    def test_not_login(self):
+        # ログインするユーザ情報(ID、パスワード)
+        user_id = 'user'
+        password = '1234'
+
+        # ユーザを作成
+        new_user = User.objects.create_user(user_id, None, password)
+        new_user.save()
+
+        # self.assertIsNotNone(new_user)
+
+        # 作成したユーザに異なるパスワードでログインできないかを確認
+        client_user = Client()
+        self.assertFalse(client_user.login(username=user_id, password='error_password'))
 
 
 
