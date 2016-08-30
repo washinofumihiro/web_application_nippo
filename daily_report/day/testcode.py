@@ -21,7 +21,7 @@ class ReportTest(TestCase):
         title = 'report'
         content = 'content'
         user = 'user'
-        time = '0000'
+        time = '2016-08-24 15:43:06'
 
         #各項目への入力
         first_report.title = title
@@ -44,46 +44,44 @@ class ReportTest(TestCase):
     def test_make_user(self):
 
         #設定するIDとパスワード
-        user_id = 'user'
-        user_id2 = 'user2'
-        password = '1234'
-        null_password = ''
+        user_id_1 = 'user1'
+        user_id_2 = 'user2'
+        password = 'password'
+        no_password = ''
 
         #ユーザの作成
-        new_user = User.objects.create_user(user_id, None, password)
-        new_user = User.objects.create_user(user_id2, None, null_password)
+        new_user = User.objects.create_user(user_id_1, None, password)
+        new_user = User.objects.create_user(user_id_2, None, no_password)
         new_user.save()
 
         #作成したユーザ情報を呼び出し
         saved_user = User.objects.all()
-        actual_user = saved_user[0]
-        actual_user2 = saved_user[1]
+        actual_user_1 = saved_user[0]
+        actual_user_2 = saved_user[1]
 
         #作成したユーザのIDとパスワードが一致しているか確認
         #ID、パスワード共に入力されたとき
-        self.assertEquals(actual_user.username,user_id)
-        self.assertTrue(actual_user.check_password(password))
+        self.assertEquals(actual_user_1.username,user_id_1)
+        self.assertTrue(actual_user_1.check_password(password))
 
         #IDは入力され、パスワードが入力されなかったとき
-        self.assertEquals(actual_user2.username, user_id2)
-        self.assertTrue(actual_user2.check_password(null_password))
+        self.assertEquals(actual_user_2.username, user_id_2)
+        self.assertTrue(actual_user_2.check_password(no_password))
 
     #IDに入力がない場合、ユーザーが作成されないかどうか
     def test_not_make_user(self):
         #設定するIDとパスワード
-        true_user_id = 'user'
-        true_password = '1234'
-        null_user_id = ''
-        null_password = ''
+        no_user_id = ''
+        no_password = ''
 
         #ユーザの作成
-        self.assertRaises(ValueError, lambda: User.objects.create_user(null_user_id, None,null_password))
+        self.assertRaises(ValueError, lambda: User.objects.create_user(no_user_id, None,no_password))
 
     #作成したユーザがログインできるかどうか
     def test_login(self):
         #ログインするユーザ情報(ID、パスワード)
         user_id = 'user'
-        password = '1234'
+        password = 'password'
 
         #ユーザを作成
         new_user = User.objects.create_user(user_id, None, password)
@@ -99,7 +97,7 @@ class ReportTest(TestCase):
     def test_not_login(self):
         # ログインするユーザ情報(ID、パスワード)
         user_id = 'user'
-        password = '1234'
+        password = 'password'
 
         # ユーザを作成
         new_user = User.objects.create_user(user_id, None, password)
