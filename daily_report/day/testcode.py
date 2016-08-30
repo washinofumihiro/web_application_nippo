@@ -1,10 +1,10 @@
 from django.test import TestCase
 from .models import Report, Impression
-# from . import forms
-# from . import views
+from . import forms
+from . import views
 from django.contrib.auth.models import User
 from django.test.client import Client
-
+from django.http import HttpRequest
 
 class ReportTest(TestCase):
 
@@ -59,6 +59,10 @@ class ReportTest(TestCase):
         actual_user_1 = saved_user[0]
         actual_user_2 = saved_user[1]
 
+        # print(actual_user_1)
+        # print(actual_user_2)
+        # print('aaa')
+
         #作成したユーザのIDとパスワードが一致しているか確認
         #ID、パスワード共に入力されたとき
         self.assertEquals(actual_user_1.username,user_id_1)
@@ -110,8 +114,43 @@ class ReportTest(TestCase):
         self.assertFalse(client_user.login(username=user_id, password='error_password'))
 
 
+    # 検索機能できるかどうかのテスト
+    def test_search(self):
+
+        #データベースの入力データ
+        title = ['report', 'test', 'daily']
+        content = ['content', 'text', 'plan']
+        user = ['Terry', 'Dai', 'Allen']
+        time = ['2006-04-01 12:34:56', '2010-12-25 00:00:00', '2016-08-24 15:43:06']
+
+        #データベースに入力
+        for i in range(len(title)):
+            Report.objects.create(title=title[i], content=content[i], user=user[i], user_post_time=time[i])
 
 
+        # #登録した各項目を呼び出し
+        # input_report = Report.objects.all()
+        #
+        # #確認用
+        # for i in input_report:
+        #     print(i.title)
+        #     print(i.content)
+        #     print(i.user)
+        #     print(i.user_post_time)
+
+
+        #データベース入力の別の方法
+        # #クラスを直接使う
+        # for i in range(len(title)):
+        #     Report(title=title[i], content=content[i], user=user[i], user_post_time=time[i]).save()
+        #
+        # # 登録した各項目を呼び出し
+        # input_report = Report.objects.all()
+        # for i in input_report:
+        #     print(i.title)
+        #     print(i.content)
+        #     print(i.user)
+        #     print(i.user_post_time)
 
 
 
