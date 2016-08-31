@@ -5,6 +5,9 @@ from . import views
 from django.contrib.auth.models import User
 from django.test.client import Client
 from django.http import HttpRequest
+from . import models
+from django.db.models import Q
+
 
 class ReportTest(TestCase):
 
@@ -58,10 +61,8 @@ class ReportTest(TestCase):
         saved_user = User.objects.all()
         actual_user_1 = saved_user[0]
         actual_user_2 = saved_user[1]
-
         # print(actual_user_1)
         # print(actual_user_2)
-        # print('aaa')
 
         #作成したユーザのIDとパスワードが一致しているか確認
         #ID、パスワード共に入力されたとき
@@ -90,7 +91,6 @@ class ReportTest(TestCase):
         #ユーザを作成
         new_user = User.objects.create_user(user_id, None, password)
         new_user.save()
-
         # self.assertIsNotNone(new_user)
 
         #作成したユーザでログインできるかを確認
@@ -106,7 +106,6 @@ class ReportTest(TestCase):
         # ユーザを作成
         new_user = User.objects.create_user(user_id, None, password)
         new_user.save()
-
         # self.assertIsNotNone(new_user)
 
         # 作成したユーザに異なるパスワードでログインできないかを確認
@@ -123,36 +122,74 @@ class ReportTest(TestCase):
         user = ['Terry', 'Dai', 'Allen']
         time = ['2006-04-01 12:34:56', '2010-12-25 00:00:00', '2016-08-24 15:43:06']
 
-        #データベースに入力
+        #テストコード内の検索に使用するキーワード
+        keyword = 'Terry'
+
+        #データベースを作成
         for i in range(len(title)):
             Report.objects.create(title=title[i], content=content[i], user=user[i], user_post_time=time[i])
 
-
         # #登録した各項目を呼び出し
         # input_report = Report.objects.all()
-        #
-        # #確認用
-        # for i in input_report:
-        #     print(i.title)
-        #     print(i.content)
-        #     print(i.user)
-        #     print(i.user_post_time)
-
 
         #データベース入力の別の方法
         # #クラスを直接使う
         # for i in range(len(title)):
         #     Report(title=title[i], content=content[i], user=user[i], user_post_time=time[i]).save()
-        #
+
         # # 登録した各項目を呼び出し
         # input_report = Report.objects.all()
         # for i in input_report:
-        #     print(i.title)
-        #     print(i.content)
-        #     print(i.user)
-        #     print(i.user_post_time)
+        #     print(i.title, i.content, i.user, i.user_post_time)
 
 
+        #検索ページ(report_list.html)の呼び出し
+        c = Client()
+        # response = c.post('/', {'username': 'Terry', 'password': 'password'})
+        # response.status_code
+
+        response_data = c.post('/day/report/search/', {'Search': keyword})
+        # print(response_data.context)
+        # print(response_data.context['word'])
+        # print(response_data.context['reports'])   #そのままではエラー
+        # for i in response_data.content:
+        #     print(i)
+
+        #確認用
+        # for  i in response_data.context['reports']:
+        #     print(i.title, i.content, i.user, i.user_post_time)
+
+
+        #テストコード内でフィルターをかける
+        #ほとんどviews.report_searchと同じ
+        keyword = keyword.split()
+        queries1 = [Q(user_post_time__icontains=word) for word in keyword]
+        queries2 = [Q(user__icontains=word) for word in keyword]
+        queries3 = [Q(title__icontains=word) for word in keyword]
+        queries4 = [Q(content__icontains=word) for word in keyword]
+        query = queries1.pop(0)
+
+        for item in queries1:
+            query |= item
+        for item in queries2:
+            query |= item
+        for item in queries3:
+            query |= item
+        for item in queries4:
+            query |= item
+
+        input_report = Report.objects.filter(query).order_by('id')
+
+        #確認用
+        # for i in input_report:
+        #     print(i.title, i.content, i.user, i.user_post_time)
+
+        #Searchクラスが正常に検索できているかをテスト
+        for i,j in zip(response_data.context['reports'], input_report):
+            self.assertEquals(i.title, j.title)
+            self.assertEquals(i.content, j.content)
+            self.assertEquals(i.user, j.user)
+            self.assertEquals(i.user_post_time, j.user_post_time)
 
 
 
