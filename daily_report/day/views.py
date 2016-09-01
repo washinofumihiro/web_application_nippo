@@ -345,8 +345,8 @@ def report_search(request):
                       'day/report_list.html',     # 使用するテンプレート
                       {'reports': reports, 'form': form, 'word':request.POST['Search']})         # テンプレートに渡すデータ
 
-        else:#入力がない場合
-            reports = Report.objects.all().order_by('id')
-            return render(request,
-                      'day/report_list.html',  # 使用するテンプレート
-                      {'reports': reports, 'form': form})  # テンプレートに渡すデータ
+    else:#入力がない場合
+        reports = Report.objects.all().order_by('id')
+        return render(request,
+                  'day/report_list.html',  # 使用するテンプレート
+                  {'reports': reports,})  # テンプレートに渡すデータ
