@@ -249,28 +249,29 @@ def report_search(request):
     #     return render(request, 'day/report_list.html', {'reports': Report.objects.all().order_by('id')})
 
     # query = "iii"
-    if request.method == 'POST':
+    if request.method == 'GET':
         # print(request.POST)
         #form = request.POST['Search']
         # print(form)
         # print(form[''])
 
-        form = SearchForm(request.POST)
+        form = SearchForm(request.GET)
         # print(request.POST)
         # print(form)
         reports = Report.objects.all().order_by('id')
 
         if form.is_valid():
             # print(form.cleaned_data["Search"])
-            # print(request.POST['Search'])
-            keyword = request.POST['Search'].split()
+            # print(request.GET['Search'])
+            # keyword = request.POST['Search'].split()
+            keyword = form.cleaned_data['Search'].split()
             # print(keyword)
 
 
             # チェックボックスにチェックがある場合はキーワードから各カラムを検索
-            if request.POST.getlist('search_form'):
+            if request.GET.getlist('search_form'):
                 query = Q()
-                for data in request.POST.getlist('search_form'):
+                for data in request.GET.getlist('search_form'):
                     if data == 'user_post_time':
                         queries = [Q(user_post_time__icontains=word) for word in keyword]
                         # query = queries.pop(0)
@@ -343,10 +344,16 @@ def report_search(request):
 
             return render(request,
                       'day/report_list.html',     # 使用するテンプレート
-                      {'reports': reports, 'form': form, 'word':request.POST['Search']})         # テンプレートに渡すデータ
+                      {'reports': reports, 'form': form, 'word':request.GET['Search']})         # テンプレートに渡すデータ
 
-    else:#入力がない場合
+        else:#入力がない場合
+            reports = Report.objects.all().order_by('id')
+            return render(request,
+                      'day/report_list.html',  # 使用するテンプレート
+                      {'reports': reports, 'form': form})  # テンプレートに渡すデータ
+
+    else:  #検索フォームを押さない場合
         reports = Report.objects.all().order_by('id')
         return render(request,
                   'day/report_list.html',  # 使用するテンプレート
-                  {'reports': reports,})  # テンプレートに渡すデータ
+                  {'reports': reports})  # テンプレートに渡すデータ

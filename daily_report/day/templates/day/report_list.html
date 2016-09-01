@@ -14,7 +14,7 @@ table {
     <h3 class="user-header">日報一覧</h3>
     <a href="{% url 'day:report_add' %}" class="btn btn-default btn-sm">日報追加</a>
     <span>ようこそ！{{request.user.username}}さん</span>
-    <form action="{% url 'day:report_search' %}" method="post" class="form-horizontal" role="form">
+    <form action="{% url 'day:report_search' %}" method="get" class="form-horizontal" role="form">
       {% csrf_token %}
         {{form.Search}}
         <input id='check1' type="checkbox" name="search_form" value="user_post_time">日時
