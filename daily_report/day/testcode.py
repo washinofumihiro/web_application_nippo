@@ -7,6 +7,9 @@ from django.test.client import Client
 from django.http import HttpRequest
 from . import models
 from django.db.models import Q
+from django.template.loader import render_to_string
+from django.test import TestCase, RequestFactory
+from django.contrib.auth import authenticate
 
 
 class ReportTest(TestCase):
@@ -38,9 +41,9 @@ class ReportTest(TestCase):
         actual_report = saved_report[0]
 
         #各データが一致しているかを確認
-        self.assertEquals(actual_report.title,title)
+        self.assertEquals(actual_report.title, title)
         self.assertEquals(actual_report.content, content)
-        self.assertEquals(actual_report.user,user )
+        self.assertEquals(actual_report.user, user)
         self.assertEquals(actual_report.user_post_time, time)
 
     #ユーザが正しく作成されるかどうか
@@ -111,6 +114,89 @@ class ReportTest(TestCase):
         # 作成したユーザに異なるパスワードでログインできないかを確認
         client_user = Client()
         self.assertFalse(client_user.login(username=user_id, password='error_password'))
+
+
+    #ユーザ認証テスト
+    #ログイン状態によるページへのアクセスの可否をテスト
+    def test_auth(self):
+        # ログインするユーザ情報(ID、パスワード)
+        user_id = 'user'
+        password = 'password'
+
+        # ユーザを作成
+        new_user = User.objects.create_user(user_id, None, password)
+        new_user.save()
+
+        # user = authenticate(username=user_id, password=password)
+
+
+        c = Client()
+        c.login(username=user_id, password=password)
+
+        #各項目の入力データ
+        first_report = Report()
+        title = 'report'
+        content = 'content'
+        user = 'user'
+        time = '2016-08-24 15:43:06'
+
+        #各項目への入力
+        first_report.title = title
+        first_report.content = content
+        first_report.user = user
+        first_report.user_post_time = time
+        first_report.save()
+
+        first_impression = Impression()
+        comment = 'abc'
+        comment_user = 'Allen'
+        comment_time = '2010-12-25 00:00:00',
+        first_impression.report = first_report
+        first_impression.comment = comment
+        first_impression.comment_user = comment_user
+        first_impression.comment_time = comment_time
+        first_impression.save()
+
+
+        # print(first_impression.report.title)
+        # print(first_impression.comment)
+
+        # response = c.post('')
+        # response = c.login(username=user_id, password=password)
+        # print(c.logout())
+        # print(response.client)
+        # self.failUnlessEqual(response.status_code, 302)
+        # c.login(username=user_id, password=password)
+        #
+        # response = c.get('/')
+        # self.failUnlessEqual(response.status_code, 200)
+        # print(response.client)
+
+
+        #未ログインでページ遷移できないかを確認
+        test_utl = ['/day/report/', '/day/report/add/', '/day/report/search/',
+                    '/day/report/mod/1/',  '/day/report/browse/1/',
+                    '/day/impression/1/', '/day/impression/add/1/',
+                    '/day/impression/mod/1/1/']
+
+
+        for i in range(len(test_utl)):
+            response_data = c.get(test_utl[i])
+            self.assertEqual(response_data.status_code, 200)
+            print(i)
+
+        response_data = c.get('/day/report/del/1/')
+        self.assertRedirects(response_data, '/day/report/')
+        response_data = c.get('/day/impression/del/1/1/')
+        self.assertRedirects(response_data,  '/day/impression/1/')
+
+        c.logout()
+
+        response_data = c.get('/day/report/')
+
+        self.assertEqual(response_data.status_code, 302)
+
+
 
 
     # 検索機能できるかどうかのテスト
