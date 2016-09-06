@@ -13,40 +13,43 @@ from django.contrib.auth import authenticate
 
 
 class ReportTest(TestCase):
+    #ユーザの作成
+    def create_user(self, username, password):
+        return User.objects.create_user(username, None, password)
 
-    #データベースの初期状態の確認(何も入力されないかどうか)
+    #日報の作成
+    def create_report(self, title, content, user, time):
+        return Report.objects.create(title=title, content=content, user=user, user_post_time=time)
+
+    #日報に対してのコメントの作成
+    def create_impression(self, report, comment, comment_user, comment_time):
+        return Impression.objects.create(report=report, comment=comment, comment_user=comment_user,
+                                  comment_time=comment_time)
+
+    #データベースの初期状態の確認(何も入力されていないか確認)
     def test_init_database(self):
         saved_report = Report.objects.all()
-        self.assertEquals(saved_report.count(),0)
+        self.assertEquals(saved_report.count(), 0)
 
-    #日報の各項目が正しく入力されているかどうか
+    #日報の各項目が正しく入力されているか確認
     def test_report_add(self):
 
         #各項目の入力データ
-        first_report = Report()
         title = 'report'
         content = 'content'
         user = 'user'
         time = '2016-08-24 15:43:06'
 
-        #各項目への入力
-        first_report.title = title
-        first_report.content = content
-        first_report.user = user
-        first_report.user_post_time = time
-        first_report.save()
-
-        #登録した各項目を呼び出し
-        saved_report = Report.objects.all()
-        actual_report = saved_report[0]
+        #各データの入力と呼び出し
+        report = self.create_report(title, content, user, time)
 
         #各データが一致しているかを確認
-        self.assertEquals(actual_report.title, title)
-        self.assertEquals(actual_report.content, content)
-        self.assertEquals(actual_report.user, user)
-        self.assertEquals(actual_report.user_post_time, time)
+        self.assertEquals(report.title, title)
+        self.assertEquals(report.content, content)
+        self.assertEquals(report.user, user)
+        self.assertEquals(report.user_post_time, time)
 
-    #ユーザが正しく作成されるかどうか
+    #ユーザが正しく作成されるか確認
     def test_make_user(self):
 
         #設定するIDとパスワード
@@ -55,26 +58,18 @@ class ReportTest(TestCase):
         password = 'password'
         no_password = ''
 
-        #ユーザの作成
-        new_user = User.objects.create_user(user_id_1, None, password)
-        new_user = User.objects.create_user(user_id_2, None, no_password)
-        new_user.save()
-
-        #作成したユーザ情報を呼び出し
-        saved_user = User.objects.all()
-        actual_user_1 = saved_user[0]
-        actual_user_2 = saved_user[1]
-        # print(actual_user_1)
-        # print(actual_user_2)
+        #ユーザの作成と呼び出し
+        user_1 = self.create_user(user_id_1, password)
+        user_2 = self.create_user(user_id_2, no_password)
 
         #作成したユーザのIDとパスワードが一致しているか確認
         #ID、パスワード共に入力されたとき
-        self.assertEquals(actual_user_1.username,user_id_1)
-        self.assertTrue(actual_user_1.check_password(password))
+        self.assertEquals(user_1.username, user_id_1)
+        self.assertTrue(user_1.check_password(password))
 
         #IDは入力され、パスワードが入力されなかったとき
-        self.assertEquals(actual_user_2.username, user_id_2)
-        self.assertTrue(actual_user_2.check_password(no_password))
+        self.assertEquals(user_2.username, user_id_2)
+        self.assertTrue(user_2.check_password(no_password))
 
     #IDに入力がない場合、ユーザーが作成されないかどうか
     def test_not_make_user(self):
@@ -82,7 +77,7 @@ class ReportTest(TestCase):
         no_user_id = ''
         no_password = ''
 
-        #ユーザの作成
+        #ユーザが作成できないことを確認
         self.assertRaises(ValueError, lambda: User.objects.create_user(no_user_id, None,no_password))
 
     #作成したユーザがログインできるかどうか
@@ -92,13 +87,11 @@ class ReportTest(TestCase):
         password = 'password'
 
         #ユーザを作成
-        new_user = User.objects.create_user(user_id, None, password)
-        new_user.save()
-        # self.assertIsNotNone(new_user)
+        self.create_user(user_id, password)
 
         #作成したユーザでログインできるかを確認
         client_user = Client()
-        self.assertTrue(client_user.login(username = user_id, password = password))
+        self.assertTrue(client_user.login(username=user_id, password=password))
 
     #異なるID、パスワードでログインできないかどうか
     def test_not_login(self):
@@ -107,102 +100,60 @@ class ReportTest(TestCase):
         password = 'password'
 
         # ユーザを作成
-        new_user = User.objects.create_user(user_id, None, password)
-        new_user.save()
-        # self.assertIsNotNone(new_user)
+        self.create_user(user_id, password)
 
         # 作成したユーザに異なるパスワードでログインできないかを確認
         client_user = Client()
         self.assertFalse(client_user.login(username=user_id, password='error_password'))
 
-
     #ユーザ認証テスト
     #ログイン状態によるページへのアクセスの可否をテスト
     def test_auth(self):
+        # データベースの入力データ
         # ログインするユーザ情報(ID、パスワード)
-        user_id = 'user'
+        user_id = 'Terry'
         password = 'password'
+        title = ['report', 'test', 'daily']
+        content = ['content', 'text', 'plan']
+        user = ['Terry', 'Dai', 'Allen']
+        time = ['2006-04-01 12:34:56', '2010-12-25 00:00:00', '2016-08-24 15:43:06']
+        comment = ['Great', 'Good', 'Bad']
+        comment_user = ['Allen', 'Terry', 'Dai']
+        comment_time = ['2010-12-25 00:00:00', '2016-08-24 15:43:06', '2006-04-01 12:34:56']
 
-        # ユーザを作成
-        new_user = User.objects.create_user(user_id, None, password)
-        new_user.save()
+        #ユーザの作成
+        self.create_user(user_id, password)
+        client_user = Client()
+        client_user.login(username=user_id, password=password)
 
-        # user = authenticate(username=user_id, password=password)
+       # データベースを作成
+        for i in range(len(title)):
+            self.create_report(title[i], content[i], user[i], time[i])
 
+        for i in range(len(comment)):
+            init_report = Report.objects.get(id=i+1)
+            self.create_impression(init_report, comment[i], comment_user[i], comment_time[i])
 
-        c = Client()
-        c.login(username=user_id, password=password)
-
-        #各項目の入力データ
-        first_report = Report()
-        title = 'report'
-        content = 'content'
-        user = 'user'
-        time = '2016-08-24 15:43:06'
-
-        #各項目への入力
-        first_report.title = title
-        first_report.content = content
-        first_report.user = user
-        first_report.user_post_time = time
-        first_report.save()
-
-        first_impression = Impression()
-        comment = 'abc'
-        comment_user = 'Allen'
-        comment_time = '2010-12-25 00:00:00',
-        first_impression.report = first_report
-        first_impression.comment = comment
-        first_impression.comment_user = comment_user
-        first_impression.comment_time = comment_time
-        first_impression.save()
-
-
-        # print(first_impression.report.title)
-        # print(first_impression.comment)
-
-        # response = c.post('')
-        # response = c.login(username=user_id, password=password)
-        # print(c.logout())
-        # print(response.client)
-        # self.failUnlessEqual(response.status_code, 302)
-        # c.login(username=user_id, password=password)
-        #
-        # response = c.get('/')
-        # self.failUnlessEqual(response.status_code, 200)
-        # print(response.client)
-
-
-        #未ログインでページ遷移できないかを確認
-        test_utl = ['/day/report/', '/day/report/add/', '/day/report/search/',
+        #ログインしてページ遷移できるかを確認
+        test_url = ['/day/report/', '/day/report/add/', '/day/report/search/',
                     '/day/report/mod/1/',  '/day/report/browse/1/',
                     '/day/impression/1/', '/day/impression/add/1/',
                     '/day/impression/mod/1/1/']
 
-
-        for i in range(len(test_utl)):
-            response_data = c.get(test_utl[i])
+        for i in range(len(test_url)):
+            response_data = client_user.get(test_url[i])
             self.assertEqual(response_data.status_code, 200)
-            print(i)
 
-        response_data = c.get('/day/report/del/1/')
+        #リダイレクトできているかを確認
+        response_data = client_user.get('/day/report/del/1/')
         self.assertRedirects(response_data, '/day/report/')
-        response_data = c.get('/day/impression/del/1/1/')
-        self.assertRedirects(response_data,  '/day/impression/1/')
-
-        c.logout()
-
-        response_data = c.get('/day/report/')
-
-        self.assertEqual(response_data.status_code, 302)
-
-
+        response_data = client_user.get('/day/impression/del/2/2/')
+        self.assertRedirects(response_data, '/day/impression/2/')
 
 
     # 検索機能できるかどうかのテスト
     def test_search(self):
-
-        #データベースの入力データ
+        # #データベースの入力データ
         title = ['report', 'test', 'daily']
         content = ['content', 'text', 'plan']
         user = ['Terry', 'Dai', 'Allen']
@@ -213,38 +164,17 @@ class ReportTest(TestCase):
 
         #データベースを作成
         for i in range(len(title)):
-            Report.objects.create(title=title[i], content=content[i], user=user[i], user_post_time=time[i])
-
-        # #登録した各項目を呼び出し
-        # input_report = Report.objects.all()
-
-        #データベース入力の別の方法
-        # #クラスを直接使う
-        # for i in range(len(title)):
-        #     Report(title=title[i], content=content[i], user=user[i], user_post_time=time[i]).save()
-
-        # # 登録した各項目を呼び出し
-        # input_report = Report.objects.all()
-        # for i in input_report:
-        #     print(i.title, i.content, i.user, i.user_post_time)
-
+            self.create_report(title[i], content[i], user[i], time[i])
 
         #検索ページ(report_list.html)の呼び出し
-        c = Client()
-        # response = c.post('/', {'username': 'Terry', 'password': 'password'})
-        # response.status_code
+        client_user = Client()
 
-        response_data = c.post('/day/report/search/', {'Search': keyword})
-        # print(response_data.context)
-        # print(response_data.context['word'])
-        # print(response_data.context['reports'])   #そのままではエラー
-        # for i in response_data.content:
-        #     print(i)
+
+        response_data = client_user.post('/day/report/search/', {'Search': keyword})
 
         #確認用
         # for  i in response_data.context['reports']:
         #     print(i.title, i.content, i.user, i.user_post_time)
-
 
         #テストコード内でフィルターをかける
         #ほとんどviews.report_searchと同じ
@@ -265,10 +195,6 @@ class ReportTest(TestCase):
             query |= item
 
         input_report = Report.objects.filter(query).order_by('id')
-
-        #確認用
-        # for i in input_report:
-        #     print(i.title, i.content, i.user, i.user_post_time)
 
         #Searchクラスが正常に検索できているかをテスト
         for i,j in zip(response_data.context['reports'], input_report):
