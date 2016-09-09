@@ -12,6 +12,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth import authenticate
 import hashlib
 import random
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ReportTest(TestCase):
@@ -67,7 +68,7 @@ class ReportTest(TestCase):
 
     #日報の削除
     def delete_report(self, report_id):
-        return Report.objects.get(id=report_id).delete()
+        Report.objects.get(id=report_id).delete()
 
     #日報に対してのコメントの作成
     def create_impression(self, report, comment, comment_user, comment_time):
@@ -75,7 +76,7 @@ class ReportTest(TestCase):
                                   comment_time=comment_time)
 
     def delete_impression(self, impression_id):
-        return Report.objects.get(id=impression_id).delete()
+        Report.objects.get(id=impression_id).delete()
 
     #データベースの初期状態の確認(何も入力されていないか確認)
     def test_init_database(self):
@@ -139,7 +140,7 @@ class ReportTest(TestCase):
         client_user = Client()
         self.assertFalse(client_user.login(username=self.user_id[0], password=self.error_password))
 
-    #日報の各項目が正しく入力され、また削除できるか確認
+    #日報の各項目が正しく入力され、また、削除できるか確認
     def test_report_add(self):
         #各データの入力と呼び出し
         report = self.create_report(self.title[0], self.content[0], self.user[0], self.time[0])
@@ -150,6 +151,49 @@ class ReportTest(TestCase):
         self.assertEquals(report.user, self.user[0])
         self.assertEquals(report.user_post_time, self.time[0])
 
+        #日報の削除
+        report_id = report.id
+        # print(report_id)
+        report = self.delete_report(report_id)
+
+        # 各データが削除されているかを確認
+        # self.assertRaises(ValueError, lambda: User.objects.create_user(self.no_user_id, None, self.no_password))
+        self.assertRaises(AttributeError, lambda : report.title)
+        self.assertRaises(AttributeError, lambda : report.content)
+        self.assertRaises(AttributeError, lambda : report.user)
+        self.assertRaises(AttributeError, lambda : report.time)
+        self.assertEquals(report, None)
+        # self.assertEquals(report.title, self.title[0])
+        # self.assertEquals(report.content, self.content[0])
+        # self.assertEquals(report.user, self.user[0])
+        # self.assertEquals(report.user_post_time, self.time[0])
+
+    #コメントが正しく入力され、また、削除できるかを確認
+    def test_immpression_add(self):
+        report = self.create_report(self.title[0], self.content[0], self.user[0], self.time[0])
+        comment = self.create_impression(report, self.comment[0], self.comment_user[0], self.comment_time[0])
+
+        #各日報にコメントが入力されているかを確認
+        self.assertEquals(comment.comment, self.comment[0])
+        self.assertEquals(comment.comment_user, self.comment_user[0])
+        self.assertEquals(comment.comment_time, self.comment_time[0])
+
+        #コメントの削除
+        report_id = report.id
+        # print(report_id)
+        # comment_id = comment.id
+        # aa = Report.objects.all()
+        # print(aa.count())
+
+        comment_id = Report.objects.all().prefetch_related("impressions").get(id=report_id).impressions.values()[0]['id']
+        comment = self.delete_impression(comment_id)
+
+        # 各データが削除されているかを確認
+        # self.assertRaises(ValueError, lambda: User.objects.create_user(self.no_user_id, None, self.no_password))
+        self.assertRaises(AttributeError, lambda : comment.comment)
+        self.assertRaises(AttributeError, lambda : comment.comment_user)
+        self.assertRaises(AttributeError, lambda : comment.comment_time)
+        self.assertEquals(comment, None)
 
     #日報に対して
     #ユーザ認証テスト
