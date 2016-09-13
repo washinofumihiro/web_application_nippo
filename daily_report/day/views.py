@@ -80,7 +80,7 @@ def create_user(request):
 
     except IntegrityError:
         error_word = 'すでに存在しているUser IDです。別のUser IDに変更してください。'
-    return render(request, 'day/register.html', {'error_word': error_word})
+        return render(request, 'day/register.html', {'error_word': error_word})
 
 
     return redirect('/')
