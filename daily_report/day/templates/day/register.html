@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <head><meta charset="UTF-8"></head>
-{% if error_word %}
-<p>{{ error_word }}</p>
+{% if error_message %}
+<p>{{ error_message }}</p>
 {% endif %}
 <body>
   <h3>ユーザ登録</h3>
   <form method="post" action="create_user">{% csrf_token %}
-    User ID: <input type="text" name="user_id" />
+    ユーザー名: <input type="text" name="user_id" />
     <br />
-    Password: <input type="password" name="password" />
+    メールアドレス: <input type="text" name="mail_address" />
+    <br />
+    パスワード: <input type="password" name="password" />
     <br />
     <input type="submit" value="Register" />
   </form>

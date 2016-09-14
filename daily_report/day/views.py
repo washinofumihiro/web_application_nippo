@@ -14,76 +14,25 @@ from datetime import datetime
 from django.forms.models import modelformset_factory
 from django.db.models import Q
 from django.db import IntegrityError
-
-
-# @require_GET
-# def _new(request):
-#     form = CustomUserCreationForm()
-#     c = {'form': form}
-#     c.update(csrf(request))
-#     return render_to_response('three/user_new.html', c, mimetype='text/html'
-
-# def registor(request):
-#     form = UserForm()
-#     return render(request,'day/registor.html', {'fom':form})
-
-
-# def regist(request):
-#     form = RegisterForm(request.POST or None)
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, 'day/regist.html', context)
-#
-# @require_POST
-# def regist_save(request):
-#     form = RegisterForm(request.POST)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('day:index')
-#
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, 'main/regist.html', context)
-#
-#
-# def index(request):
-#     context = {
-#         'user': request.user,
-#     }
-#     return render(request, 'day/index.html', context)
-#
-
-def index(request):
-    return render_to_response('day/login.html', {},
-            context_instance=RequestContext(request))
+from . import user_config
 
 
 def register(request):
     return render_to_response('day/register.html', {},
-            context_instance=RequestContext(request))
+                              context_instance=RequestContext(request))
 
 
 def create_user(request):
     user_id = request.POST['user_id']
     password = request.POST['password']
+    mail_address = request.POST['mail_address']
 
-    try:
-        new_user = User.objects.create_user(user_id, None, password)
-        new_user.save()
-    except ValueError:
+    error_message = user_config.create_user(user_id, mail_address, password)
 
-        error_word = 'User IDが空白です。User IDを入力してください。'
-        # print(error_word)
-        return render(request, 'day/register.html', {'error_word': error_word})
-
-    except IntegrityError:
-        error_word = 'すでに存在しているUser IDです。別のUser IDに変更してください。'
-        return render(request, 'day/register.html', {'error_word': error_word})
-
-
-    return redirect('/')
+    if error_message:
+        return render(request, 'day/register.html', {'error_message': error_message})
+    else:
+        return redirect('/')
 
 
 @login_required
