@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from . import database
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -81,17 +82,12 @@ password_key = os.environ.get("passkey")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'daily_report',
-        'USER': 'dbs',
-        'PASSWORD': 'password', #password_key,  # pw_key,
-        'HOST': 'localhost',  # ,'127.0.0.1',
-        'PORT': '',  # ''5432',
+        'NAME': database.name,
+        'USER': database.user,
+        'PASSWORD': database.password,
+        'HOST': database.host,
+        'PORT': database.port,
     }
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
 }
 
 
