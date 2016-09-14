@@ -15,7 +15,7 @@ from django.forms.models import modelformset_factory
 from django.db.models import Q
 from django.db import IntegrityError
 from . import user_config
-
+from . import report_api
 
 def register(request):
     return render_to_response('day/register.html', {},
@@ -27,6 +27,7 @@ def create_user(request):
     password = request.POST['password']
     mail_address = request.POST['mail_address']
 
+    # ユーザ作成、エラーがあった場合はエラーメッセージを入れる
     error_message = user_config.create_user(user_id, mail_address, password)
 
     if error_message:
@@ -37,31 +38,15 @@ def create_user(request):
 
 @login_required
 def report_list(request):
-    """書籍の一覧"""
-#    return HttpResponse('書籍の一覧')
-    reports = Report.objects.all().order_by('id')
+    reports = report_api.list
     form = SearchForm()
-    # print(form)
     return render(request,
                   'day/report_list.html',     # 使用するテンプレート
-                  {'reports': reports,'form': form})         # テンプレートに渡すデータ
-
-# @login_required
-# def report_browse(request):
-#     """書籍の一覧"""
-# #    return HttpResponse('書籍の一覧')
-#     reports = Report.objects.all().order_by('id')
-#     return render(request,
-#                   'day/browse.html',     # 使用するテンプレート
-#                   {'reports': reports})         # テンプレートに渡すデータ
+                  {'reports': reports, 'form': form})         # テンプレートに渡すデータ
 
 
 @login_required
 def report_edit(request, report_id=None):
-    """書籍の編集"""
-#     return HttpResponse('書籍の編集')
-    date_object = datetime.now()
-
     if report_id:   # report_id が指定されている (修正時)
         report = get_object_or_404(Report, pk=report_id)
         if report.user != request.user.username:
@@ -72,24 +57,12 @@ def report_edit(request, report_id=None):
     else:         # report_id が指定されていない (追加時)
         report = Report()
         report.user = request.user.username
-    # print(report.user)
-    # print(report.user_post_time)
-
-    # data = Report.objects.get(id=30)
-    # print(data)
-    # print(reports.user)
-
-    # data = get_object_or_404(Report)
-    # for test in data:
-    #     if test.user == request.user.username:
-    #         print("succes")
-    #         # print(test.objects.all().order_by('id'))
 
     if request.method == 'POST':
         form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
             report = form.save(commit=False)
-            report.user_post_time = datetime(*date_object.timetuple()[:6])
+            # report.post_time = datetime(*date_object.timetuple()[:6])
             report.save()
             return redirect('day:report_list')
     else:    # GET の時
@@ -97,7 +70,6 @@ def report_edit(request, report_id=None):
         # inst = modelformset_factory(Report, exclude=('title',))
         # form = ReportForm(instance=inst)
         # form = ReportViewForm  # report インスタンスからフォームを作成
-
 
     return render(request, 'day/report_edit.html', dict(form=form, report_id=report_id))
 
@@ -221,8 +193,8 @@ def report_search(request):
             if request.GET.getlist('search_form'):
                 query = Q()
                 for data in request.GET.getlist('search_form'):
-                    if data == 'user_post_time':
-                        queries = [Q(user_post_time__icontains=word) for word in keyword]
+                    if data == 'post_time':
+                        queries = [Q(post_time__icontains=word) for word in keyword]
                         # query = queries.pop(0)
                         for item in queries:
                             query |= item
@@ -253,7 +225,7 @@ def report_search(request):
 
             # チェックボックスにチェックがない場合はキーワードからDB内全検索
             else:
-                queries1 = [Q(user_post_time__icontains=word) for word in keyword]
+                queries1 = [Q(post_time__icontains=word) for word in keyword]
                 queries2 = [Q(user__icontains=word) for word in keyword]
                 queries3 = [Q(title__icontains=word) for word in keyword]
                 queries4 = [Q(content__icontains=word) for word in keyword]
@@ -280,8 +252,8 @@ def report_search(request):
 
             #
             # for data in request.POST.getlist('search_form'):
-            #     if data == 'user_post_time':
-            #         reports = reports.filter(user_post_time__icontains=form.cleaned_data["Search"]).order_by('id')
+            #     if data == 'post_time':
+            #         reports = reports.filter(post_time__icontains=form.cleaned_data["Search"]).order_by('id')
             #     elif data == 'user':
             #         reports = reports.filter(user__icontains=form.cleaned_data["Search"]).order_by('id')
             #     elif data == 'title':

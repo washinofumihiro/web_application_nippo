@@ -17,7 +17,7 @@ table {
     <form action="{% url 'day:report_search' %}" method="get" class="form-horizontal" role="form">
       {% csrf_token %}
         {{form.Search}}
-        <input id='check1' type="checkbox" name="search_form" value="user_post_time">日時
+        <input id='check1' type="checkbox" name="search_form" value="post_time">日時
         <input id='check2' type="checkbox" name="search_form" value="user">投稿者
         <input id='check3' type="checkbox" name="search_form" value="title">タイトル
         <input id='check4' type="checkbox" name="search_form" value="content">内容
@@ -50,7 +50,7 @@ table {
           <!--<td>{{ report.title }}</td>-->
           <!--<td>{{ report.user }}</td>-->
             <td >{{ report.id }}</td>
-            <td>{{report.user_post_time}}</td>
+            <td>{{report.post_time}}</td>
             <td>{{ report.user }}</td>
             <td>{{ report.title }}</td>
             <td>{{ report.content }}</td>
