@@ -17,6 +17,7 @@ from django.db import IntegrityError
 from . import user_config
 from . import report_api
 
+
 def register(request):
     return render_to_response('day/register.html', {},
                               context_instance=RequestContext(request))
@@ -45,31 +46,40 @@ def report_list(request):
                   {'reports': reports, 'form': form})         # テンプレートに渡すデータ
 
 
+# @login_required
+# def report_edit(request, report_id=None):
+#     if report_id:   # report_id が指定されている (修正時)
+#         report = get_object_or_404(Report, pk=report_id)
+#         if report.user != request.user.username:
+#             return render(request, 'day/report_list.html', {'reports': Report.objects.all().order_by('id')})
+#     else:         # report_id が指定されていない (追加時)
+#         report = Report()
+#         report.user = request.user.username
+#
+#     if request.method == 'POST':
+#         form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
+#         if form.is_valid():    # フォームのバリデーション
+#             report = form.save(commit=False)
+#             report.save()
+#             return redirect('day:report_list')
+#     else:    # GET の時
+#         form = ReportForm(instance=report)  # report インスタンスからフォームを作成
+#
+#     return render(request, 'day/report_edit.html', dict(form=form, report_id=report_id))
+
+
 @login_required
 def report_edit(request, report_id=None):
-    if report_id:   # report_id が指定されている (修正時)
-        report = get_object_or_404(Report, pk=report_id)
-        if report.user != request.user.username:
-            print(report.user)
-            print(request.user)
-            print("あなたが投稿した日報でありません。")
-            return render(request, 'day/report_list.html', {'reports': Report.objects.all().order_by('id')})
-    else:         # report_id が指定されていない (追加時)
-        report = Report()
-        report.user = request.user.username
+    #日報の選択
+    report = report_api.show(report_id, request.user.username)
 
+    # POSTかGETか
     if request.method == 'POST':
-        form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
-        if form.is_valid():    # フォームのバリデーション
-            report = form.save(commit=False)
-            # report.post_time = datetime(*date_object.timetuple()[:6])
-            report.save()
+        form = report_api.edit(report, request.POST, request.user.username)
+        if form.is_valid():
             return redirect('day:report_list')
-    else:    # GET の時
+    else:  # GET の時
         form = ReportForm(instance=report)  # report インスタンスからフォームを作成
-        # inst = modelformset_factory(Report, exclude=('title',))
-        # form = ReportForm(instance=inst)
-        # form = ReportViewForm  # report インスタンスからフォームを作成
 
     return render(request, 'day/report_edit.html', dict(form=form, report_id=report_id))
 
