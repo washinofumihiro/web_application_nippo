@@ -67,6 +67,11 @@ def edit(post_data, comment, report_id):
     return form
 
 
+def delete(comment_id):
+    comment = get_object_or_404(Impression, pk=comment_id)
+    comment.delete()
+
+
 def impression_edit(request, report_id, impression_id=None):
     """感想の編集"""
     date_object = datetime.now()

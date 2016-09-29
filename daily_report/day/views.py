@@ -197,10 +197,8 @@ def impression_edit(request, report_id, impression_id=None):
 @login_required
 def impression_del(request, report_id, impression_id):
     """感想の削除"""
-    impression = get_object_or_404(Impression, pk=impression_id)
-    impression.delete()
+    comment_api.delete(impression_id)
     return redirect('day:impression_list', report_id=report_id)
-
 
 
 
