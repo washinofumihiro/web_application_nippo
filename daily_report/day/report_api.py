@@ -44,6 +44,10 @@ def edit(report, post_data, login_user):
     # print(form.is_valid)
     return form
 
+def delete(report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    report.delete()
+
 
 # def make(login_user):
 #     report = Report()

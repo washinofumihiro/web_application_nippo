@@ -123,9 +123,7 @@ def report_browse(request, report_id=None):
 @login_required
 def report_del(request, report_id):
     """書籍の削除"""
-    #     return HttpResponse('書籍の削除')
-    report = get_object_or_404(Report, pk=report_id)
-    report.delete()
+    report_api.delete(report_id)
     return redirect('day:report_list')
 
 
