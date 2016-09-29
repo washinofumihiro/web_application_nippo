@@ -16,6 +16,7 @@ from django.db.models import Q
 from django.db import IntegrityError
 from . import user_config
 from . import report_api
+from . import  comment_api
 
 
 # def register(request):
@@ -127,22 +128,26 @@ def report_del(request, report_id):
     return redirect('day:report_list')
 
 
-
-class ImpressionList(ListView):
-    """感想の一覧"""
-    context_object_name='impressions'
-    template_name='day/impression_list.html'
-    paginate_by = 10  # １ページは最大2件ずつでページングする
-
-    # @login_required
-    def get(self, request, *args, **kwargs):
-        report = get_object_or_404(Report, pk=kwargs['report_id'])  # 親の書籍を読む
-        impressions = report.impressions.all().order_by('id')   # 書籍の子供の、感想を読む
-        self.object_list = impressions
-
-        context = self.get_context_data(object_list=self.object_list, report=report)
-        return self.render_to_response(context)
-
+def list_comment(request, report_id=None):
+    comment = comment_api.list(report_id)
+    report = get_object_or_404(Report, pk=report_id)
+    return render(request,
+                  'day/impression_list.html',  # 使用するテンプレート
+                  {'impressions': comment, 'report': report})
+# class ImpressionList(ListView):
+#     """感想の一覧"""
+#     context_object_name='impressions'
+#     template_name='day/impression_list.html'
+#     paginate_by = 10  # １ページは最大2件ずつでページングする
+#
+#     # @login_required
+#     def get(self, request, *args, **kwargs):
+#         report = get_object_or_404(Report, pk=kwargs['report_id'])  # 親の書籍を読む
+#         impressions = report.impressions.all().order_by('id')   # 書籍の子供の、感想を読む
+#         self.object_list = impressions
+#
+#         context = self.get_context_data(object_list=self.object_list, report=report)
+#         return self.render_to_response(context)
 
 
 @login_required
