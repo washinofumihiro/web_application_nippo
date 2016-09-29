@@ -25,6 +25,6 @@ urlpatterns = [
     url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'day/login.html'}),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'day/logged_out.html'}),
     # url(r'^$', 'day.views.index'),
-    url(r'^register$', 'day.views.register'),
-    url(r'^create_user$', 'day.views.create_user'),
+    url(r'^register$', 'day.views.create_user'),
+    # url(r'^create_user$', 'day.views.create_user'),
 ]

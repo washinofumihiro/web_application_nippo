@@ -5,7 +5,7 @@
 {% endif %}
 <body>
   <h3>ユーザ登録</h3>
-  <form method="post" action="create_user">{% csrf_token %}
+  <form method="post" action="register">{% csrf_token %}
     ユーザー名: <input type="text" name="user_id" />
     <br />
     メールアドレス: <input type="text" name="mail_address" />

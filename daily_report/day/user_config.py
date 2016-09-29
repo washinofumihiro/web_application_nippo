@@ -17,10 +17,10 @@ from django.db.models import Q
 from django.db import IntegrityError
 
 
-def create_user(user_id, mail_address, password):
-    user_id = user_id
-    mail_address = mail_address
-    password = password
+def create_user(request):
+    user_id = request['user_id']
+    password = request['password']
+    mail_address = request['mail_address']
     error_message = ""
     password_length = 8
 

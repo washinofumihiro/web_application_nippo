@@ -18,23 +18,36 @@ from . import user_config
 from . import report_api
 
 
-def register(request):
-    return render_to_response('day/register.html', {},
-                              context_instance=RequestContext(request))
+# def register(request):
+#     return render_to_response('day/register.html', {},
+#                               context_instance=RequestContext(request))
 
+
+# def create_user(request):
+#     user_id = request.POST['user_id']
+#     password = request.POST['password']
+#     mail_address = request.POST['mail_address']
+#
+#     # ユーザ作成、エラーがあった場合はエラーメッセージを入れる
+#     error_message = user_config.create_user(user_id, mail_address, password)
+#
+#     if error_message:
+#         return render(request, 'day/register.html', {'error_message': error_message})
+#     else:
+#         return redirect('/')
 
 def create_user(request):
-    user_id = request.POST['user_id']
-    password = request.POST['password']
-    mail_address = request.POST['mail_address']
-
-    # ユーザ作成、エラーがあった場合はエラーメッセージを入れる
-    error_message = user_config.create_user(user_id, mail_address, password)
-
-    if error_message:
-        return render(request, 'day/register.html', {'error_message': error_message})
-    else:
-        return redirect('/')
+    # POSTかGETか
+    if request.method == 'POST':
+        # ユーザ作成、エラーがあった場合はエラーメッセージを入れる
+        error_message = user_config.create_user(request.POST)
+        if error_message:
+            return render(request, 'day/register.html', {'error_message': error_message})
+        else:
+            return redirect('/')
+    else:  # GET の時
+        return render_to_response('day/register.html', {},
+                                  context_instance=RequestContext(request))
 
 
 @login_required
