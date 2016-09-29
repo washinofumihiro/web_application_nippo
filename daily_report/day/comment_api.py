@@ -42,3 +42,53 @@ def list(report_id):
 #
 #         context = self.get_context_data(object_list=self.object_list, report=report)
 #         return self.render_to_response(context)
+
+
+# 日報のフォーム指定
+def show(comment_id, login_user):
+    if comment_id:   # report_id が指定されている (修正時)
+        comment = get_object_or_404(Impression, pk=comment_id)
+    else:         # report_id が指定されていない (追加時)
+        comment = Impression()
+        comment.comment_user = login_user
+
+    return comment
+
+
+def edit(post_data, comment, report_id):
+    date_object = datetime.now()
+    report = get_object_or_404(Report, pk=report_id)
+    form = ImpressionForm(post_data, instance=comment)  # POST された request データからフォームを作成
+    if form.is_valid():  # フォームのバリデーション
+        comment = form.save(commit=False)
+        comment.report = report
+        comment.commnet_time = datetime(*date_object.timetuple()[:6])
+        comment.save()
+    return form
+
+
+def impression_edit(request, report_id, impression_id=None):
+    """感想の編集"""
+    date_object = datetime.now()
+    report = get_object_or_404(Report, pk=report_id)  # 親の書籍を読む
+    if impression_id:   # impression_id が指定されている (修正時)
+        impression = get_object_or_404(Impression, pk=impression_id)
+    else:               # impression_id が指定されていない (追加時)
+        impression = Impression()
+        impression.comment_user = request.user.username
+
+    if request.method == 'POST':
+        form = ImpressionForm(request.POST, instance=impression)  # POST された request データからフォームを作成
+        if form.is_valid():    # フォームのバリデーション
+            impression = form.save(commit=False)
+            impression.report = report  # この感想の、親の書籍をセット
+            impression.comment_time = datetime(*date_object.timetuple()[:6])
+            impression.save()
+            return redirect('day:impression_list', report_id=report_id)
+    else:    # GET の時
+        form = ImpressionForm(instance=impression)  # impression インスタンスからフォームを作成
+
+    return render(request,
+                  'day/impression_edit.html',
+                  dict(form=form, report_id=report_id, impression_id=impression_id))
+
