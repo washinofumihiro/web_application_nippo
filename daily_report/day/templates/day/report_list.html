@@ -8,7 +8,9 @@ table {
   margin-top: 8px;
 }
 </style>
+<script src="/static/js/question_point_color.js"></script>
 {% endblock %}
+
 
 {% block content %}
     <h3 class="user-header">日報一覧</h3>
@@ -23,6 +25,17 @@ table {
         <input id='check4' type="checkbox" name="search_form" value="content">内容
         <button type="submit" class="btn btn-primary">検索</button>
     </form>
+    <input id="test" type="button" value="test" onclick="select_question()">
+        <!--<script>-->
+        <!--function aaa(){-->
+            <!--var selObj = window.getSelection();-->
+            <!--if (selObj == '') {return false;}-->
+            <!--var range = selObj.getRangeAt(0);-->
+            <!--var span = document.createElement("span");-->
+            <!--span.style.color = "#ff0000";-->
+            <!--&lt;!&ndash;range.surroundContents(span);&ndash;&gt;-->
+            <!--}-->
+        <!--</script>-->
     {% if word %}
         <a href="{% url 'day:report_list' %}" class="btn btn-default btn-sm">戻る</a>
     {% endif %}
@@ -53,7 +66,7 @@ table {
             <td>{{report.post_time}}</td>
             <td>{{ report.user }}</td>
             <td>{{ report.title }}</td>
-            <td>{{ report.content }}</td>
+            <td>{{ report.content_Y }}</td>
             <td>
                   {% if report.user == request.user.username %}
                   <script>

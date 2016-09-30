@@ -36,13 +36,15 @@ def show(report_id, login_user):
 
 
 # 日報の編集
-def edit(report, post_data, login_user):
+def edit(post_data, report, login_user):
     form = ReportForm(post_data, instance=report)  # POST された request データからフォームを作成
     if form.is_valid():    # フォームのバリデーション
         report = form.save(commit=False)
         report.save()
+        report_id = report.id
     # print(form.is_valid)
-    return form
+    return form, report_id
+
 
 def delete(report_id):
     report = get_object_or_404(Report, pk=report_id)

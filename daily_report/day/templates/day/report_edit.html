@@ -11,13 +11,23 @@
     {% else %}
     <form action="{% url 'day:report_add' %}" method="post" class="form-horizontal" role="form">
     {% endif %}
-      {% csrf_token %}
-      {{ form|bootstrap_horizontal }}
-      <div class="form-group" aria-disabled="true">
-        <div class="col-sm-offset-2 col-sm-10" aria-disabled="true">
-          <button type="submit" class="btn btn-primary">保存</button>
+        {% csrf_token %}
+        {{ report_form|bootstrap_horizontal }}
+        {{ question_form|bootstrap_horizontal }}
+        <!--{% for question in question_form %}-->
+        <!--<tr>-->
+            <!--<td>{{ question.question_level_1 }}</td>-->
+            <!--<td>{{ question.question_level_2 }}</td>-->
+            <!--<td>{{ question.question_level_3 }}</td>-->
+            <!--<td>{{ question.question_level_4 }}</td>-->
+            <!--<td>{{ question.question_level_5 }}</td>-->
+        <!--</tr>-->
+        <!--{% endfor %}-->
+        <div class="form-group" aria-disabled="true">
+            <div class="col-sm-offset-2 col-sm-10" aria-disabled="true">
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
         </div>
-      </div>
     </form>
     <a href="{% url 'day:report_list' %}" class="btn btn-default btn-sm">戻る</a>
 {% endblock content %}

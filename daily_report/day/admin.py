@@ -10,7 +10,7 @@ class ReportAdmin(admin.ModelAdmin):
     # # list_display = ('id', 'name', 'publisher',)  # 一覧に出したい項目
     # list_display_links = ('id', 'name',)  # 修正リンクでクリックできる項目
     #
-    list_display = ('id', 'title', 'content', 'user',)  # 一覧に出したい項目
+    list_display = ('id', 'title', 'content_Y', 'user',)  # 一覧に出したい項目
     # list_display = ('id', 'name', 'publisher',)  # 一覧に出したい項目
     list_display_links = ('id', 'title',)  # 修正リンクでクリックできる項目
 admin.site.register(Report, ReportAdmin)
