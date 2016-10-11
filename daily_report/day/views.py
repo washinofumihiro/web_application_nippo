@@ -48,45 +48,46 @@ def report_list(request):
 def report_edit(request, report_id=None):
     # 日報の選択
     report = report_api.show(report_id, request.user.username)
-    question = question_level_api.show(report_id)
+    # question = question_level_api.show(report_id)
 
     # POSTかGETか
     if request.method == 'POST':
         report_form, report_id = report_api.edit(request.POST, report, request.user.username)
-        # report_id = report_form.id
-        question_form = question_level_api.edit(request.POST, question, report_id)
-        # print(report_id)
+        # # report_id = report_form.id
+        # question_form = question_level_api.edit(request.POST, question, report_id)
+        # # print(report_id)
         if report_form.is_valid():
         # if report_form.is_valid() and question_form.is_valid():
             return redirect('day:report_list')
     else:  # GET の時
         report_form = ReportForm(instance=report)  # report インスタンスからフォームを作成
-        question_form = QuestionLevelForm(instance=question)
+        # question_form = QuestionLevelForm(instance=question)
 
-    return render(request, 'day/report_edit.html', dict(report_form=report_form,
-                                                        question_form=question_form, report_id=report_id))
+    # return render(request, 'day/report_edit.html', dict(report_form=report_form,
+    #                                                     question_form=question_form, report_id=report_id))
 
-    # return render(request, 'day/report_edit.html', dict(report_form=report_form, report_id=report_id))
-
+    return render(request, 'day/report_edit.html', dict(report_form=report_form, report_id=report_id))
 
 @login_required
 def report_browse(request, report_id=None):
 
     # 日報の選択
     report = report_api.show(report_id, request.user.username)
-    question = question_level_api.show(report_id)
+    # question = question_level_api.show(report_id)
 
     # POSTかGETか
     if request.method == 'POST':
         report_form, report_id = report_api.edit(request.POST, report, request.user.username)
-        question_form = question_level_api.edit(request.POST, question, report_id)
-        if report_form.is_valid() and question_form.is_valid():
+        # question_form = question_level_api.edit(request.POST, question, report_id)
+        # if report_form.is_valid() and question_form.is_valid():
+        if report_form.is_valid():
             return redirect('day:report_list')
     else:  # GET の時
         report_form = ReportForm(instance=report)  # report インスタンスからフォームを作成
-        question_form = QuestionLevelForm(instance=question)
-    return render(request, 'day/report_browse.html', dict(report_form=report_form,
-                                                          question_form=question_form, report_id=report_id))
+        # question_form = QuestionLevelForm(instance=question)
+    # return render(request, 'day/report_browse.html', dict(report_form=report_form,
+    #                                                       question_form=question_form, report_id=report_id))
+    return render(request, 'day/report_browse.html', dict(form=report_form, report_id=report_id))
 
 
 # @login_required
