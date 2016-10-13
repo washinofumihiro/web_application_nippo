@@ -17,13 +17,8 @@
     <form action="{% url 'day:report_add' %}" method="post" class="form-horizontal" role="form">
     {% endif %}
       {% csrf_token %}
-      {{ form|bootstrap_horizontal }}
-      <div class="form-group">
-          <script>
-              document.getElementById("id_name").disabled = true;
-              document.getElementById("id_publisher").disabled = true;
-              document.getElementById("id_page").disabled = true;
-          </script>
+      {{ report_form|bootstrap_horizontal }}
+      {{ question_form|bootstrap_horizontal }}
         <!--<div class="col-sm-offset-2 col-sm-10">-->
           <!--<button type="submit" class="btn btn-primary">保存</button>-->
         <!--</div>-->

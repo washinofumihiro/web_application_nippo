@@ -13,6 +13,14 @@
     {% endif %}
         {% csrf_token %}
         {{ report_form|bootstrap_horizontal }}
+        {{ question_form|bootstrap_horizontal }}
+        <tr>
+            <td>{{ question.question_level_1 }}</td>
+            <td>{{ question.question_level_2 }}</td>
+            <td>{{ question.question_level_3 }}</td>
+            <td>{{ question.question_level_4 }}</td>
+            <td>{{ question.question_level_5 }}</td>
+        </tr>
         <div class="form-group" aria-disabled="true">
             <div class="col-sm-offset-2 col-sm-10" aria-disabled="true">
                 <button type="submit" class="btn btn-primary">保存</button>
