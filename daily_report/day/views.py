@@ -64,8 +64,12 @@ def report_edit(request, report_id=None):
         question_form = QuestionLevelForm(instance=question)
 
     # print(question_form.question_level_1)
-    return render(request, 'day/report_edit.html', dict(report_form=report_form,
-                                                        question_form=question_form, report_id=report_id, question=question))
+    # return render(request, 'day/report_edit.html', dict(report_form=report_form,
+    #                                                     question_form=question_form, report_id=report_id, question=question))
+
+    return render(request, 'day/report_edit.html', {'report_form': report_form,
+                                                        'question_form': question_form, 'report_id': report_id,
+                                                        'question': question})
 
     # return render(request, 'day/report_edit.html', dict(report_form=report_form, report_id=report_id))
 
@@ -77,18 +81,18 @@ def report_browse(request, report_id=None):
     question = question_level_api.show(report_id)
 
     # POSTかGETか
-    if request.method == 'POST':
-        report_form, report_id = report_api.edit(request.POST, report, request.user.username)
-        question_form = question_level_api.edit(request.POST, question, report_id)
-        if report_form.is_valid() and question_form.is_valid():
-        # if report_form.is_valid():
-            return redirect('day:report_list')
-    else:  # GET の時
-        report_form = ReportForm(instance=report)  # report インスタンスからフォームを作成
-        question_form = QuestionLevelForm(instance=question)
+    # if request.method == 'POST':
+    #     report_form, report_id = report_api.edit(request.POST, report, request.user.username)
+    #     question_form = question_level_api.edit(request.POST, question, report_id)
+    #     if report_form.is_valid() and question_form.is_valid():
+    #     # if report_form.is_valid():
+    #         return redirect('day:report_list')
+    # else:  # GET の時
+    #     report_form = ReportForm(instance=report)  # report インスタンスからフォームを作成
+    #     question_form = QuestionLevelForm(instance=question)
 
-    return render(request, 'day/report_browse.html', dict(report_form=report_form,
-                                                          question_form=question_form, report_id=report_id))
+    return render(request, 'day/report_browse.html', dict(report_form=report,
+                                                          question_form=question, report_id=report_id))
     # return render(request, 'day/report_browse.html', dict(form=report_form, report_id=report_id))
 
 
@@ -125,7 +129,7 @@ def list_comment(request, report_id=None):
     report = get_object_or_404(Report, pk=report_id)
     return render(request,
                   'day/impression_list.html',  # 使用するテンプレート
-                  {'impressions': comment, 'report': report})
+                  {'impressions': comment, 'report': report, 'report_id' : report_id})
 
 
 @login_required
