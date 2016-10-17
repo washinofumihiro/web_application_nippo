@@ -52,3 +52,10 @@ class Question(models.Model):
     def __str__(self):
         return self.question
 
+
+class AnswerQuestion(models.Model):
+    question = models.ForeignKey(Question, verbose_name='質問', related_name='answers')
+    answer = models.TextField('質問に対しての回答', blank=True)
+
+    def __str__(self):
+        return self.answer
