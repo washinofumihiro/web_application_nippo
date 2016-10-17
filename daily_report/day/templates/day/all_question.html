@@ -1,0 +1,28 @@
+
+
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}内容確認{% endblock title %}
+
+{% block content %}
+    <h3 class="page-header">日報の内容</h3>
+        <div class="row">
+            {% for question in question %}
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3></h3>
+                        <p>{{ question.question_content }}</p>
+                        <p>
+                            <a href="{% url 'day:add_answer' question_id=question.id  report_id=question.report_id%}" class="btn btn-default btn-sm btn-primary">回答する</a>
+                            <a href="{% url 'day:list_answer' question_id=question.id  report_id=question.report_id%}" class="btn btn-default btn-sm btn-primary">回答一覧</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+    <a href="{% url 'day:report_list' %}" class="btn btn-default btn-sm">戻る</a>
+{% endblock content %}

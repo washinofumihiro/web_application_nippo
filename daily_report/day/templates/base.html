@@ -13,15 +13,16 @@
 </head>
 <body>
   <div class="container">
-      <!--<h3 class="user-header">日報</h3>-->
-      <!--<div class="btn-group btn-group-justified">-->
-          <!--<a class="btn btn-default">default</a>-->
+      <h3 class="user-header">日報</h3>
+      <div class="btn-group btn-group-justified">
+          <a href="{% url 'day:report_list' %}" class="btn btn-default">日報一覧</a>
+          <a href="{% url 'day:all_question' %}" class="btn btn-primary">未解決問題</a>
           <!--<a class="btn btn-primary">primary</a>-->
-          <!--<a class="btn btn-success">success</a>-->
-          <!--<a class="btn btn-info">info</a>-->
-          <!--<a class="btn btn-warning">warning</a>-->
-          <!--<a class="btn btn-danger">danger</a>-->
-      <!--</div>-->
+          <a class="btn btn-success">success</a>
+          <a class="btn btn-info">info</a>
+          <a class="btn btn-warning">warning</a>
+          <a class="btn btn-danger">danger</a>
+      </div>
 
     {% block content %}
       {{ content }}

@@ -158,6 +158,14 @@ def impression_del(request, report_id, impression_id):
     return redirect('day:impression_list', report_id=report_id)
 
 
+def list_all_question(request):
+    question = question_level_api.all_list()
+
+    return render(request,
+                  'day/all_question.html',  # 使用するテンプレート
+                  {'question': question})
+
+
 def list_answer(request, report_id, question_id=None):
     answer = question_answer_api.list(question_id)
     question = get_object_or_404(Question, pk=question_id)

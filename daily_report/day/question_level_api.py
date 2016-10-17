@@ -45,3 +45,10 @@ def edit(post_data, question, report_id):
         question.report = report
         question.save()
     return form
+
+
+def all_list():
+    question = Question.objects.all()
+    # print(question[0].report_id)
+    # print(Question.objects.all().values())
+    return question

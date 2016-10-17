@@ -3,9 +3,10 @@ function select_question(obj){
 
     if (select_question == '') {return false;}
 
-    alert(select_question);
-    var base_word = 'id_question_';
-    var id_word = base_word + obj.id;
+//    alert(select_question);
+      var id_word = "id_question_content"
+//    var base_word = 'id_question_';
+//    var id_word = base_word + obj.id;
 //    alert(id_word);
     var question_level = document.getElementById(id_word);
 //    var select_range = select_question.getRangeAt(0);
