@@ -33,14 +33,22 @@ class Impression(models.Model):
         return self.comment
 
 
-class QuestionLevel(models.Model):
-    report = models.ForeignKey(Report, verbose_name='日報', related_name='levels')
-    question_level_1 = models.TextField('レベル1', blank=True)
-    question_level_2 = models.TextField('レベル2', blank=True)
-    question_level_3 = models.TextField('レベル3', blank=True)
-    question_level_4 = models.TextField('レベル4', blank=True)
-    question_level_5 = models.TextField('レベル5', blank=True)
+# class QuestionLevel(models.Model):
+#     report = models.ForeignKey(Report, verbose_name='日報', related_name='levels')
+#     question_level_1 = models.TextField('レベル1', blank=True)
+#     question_level_2 = models.TextField('レベル2', blank=True)
+#     question_level_3 = models.TextField('レベル3', blank=True)
+#     question_level_4 = models.TextField('レベル4', blank=True)
+#     question_level_5 = models.TextField('レベル5', blank=True)
+#
+#     def __str__(self):
+#         return self.level
+
+
+class Question(models.Model):
+    report = models.ForeignKey(Report, verbose_name='日報', related_name='questions')
+    question_content = models.TextField('質問内容', blank=True)
 
     def __str__(self):
-        return self.level
+        return self.question
 

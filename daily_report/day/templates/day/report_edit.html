@@ -16,23 +16,24 @@
     <form action="{% url 'day:report_add' %}" method="post" class="form-horizontal" role="form">
     {% endif %}
     <input id="level_1" type="button" value="level1" onclick="select_question(this)">
-    <input id="level_2" type="button" value="level2" onclick="select_question(this)">
-    <input id="level_3" type="button" value="level3" onclick="select_question(this)">
-    <input id="level_4" type="button" value="level4" onclick="select_question(this)">
-    <input id="level_5" type="button" value="level5" onclick="select_question(this)">
+    <!--<input id="level_2" type="button" value="level2" onclick="select_question(this)">-->
+    <!--<input id="level_3" type="button" value="level3" onclick="select_question(this)">-->
+    <!--<input id="level_4" type="button" value="level4" onclick="select_question(this)">-->
+    <!--<input id="level_5" type="button" value="level5" onclick="select_question(this)">-->
     <script>
-        var target = document.getElementById('id_question_level_1');
+        var target = document.getElementById('id_question_content');
         target.setAttribute('readOnly','true');
     </script>
         {% csrf_token %}
         {{ report_form|bootstrap_horizontal }}
         {{ question_form|bootstrap_horizontal }}
         <tr>
-            <td>{{ question.question_level_1 }}</td>
-            <td>{{ question.question_level_2 }}</td>
-            <td>{{ question.question_level_3 }}</td>
-            <td>{{ question.question_level_4 }}</td>
-            <td>{{ question.question_level_5 }}</td>
+            <td>{{ question.question_content }}</td>
+            <!--<td>{{ question.question_level_1 }}</td>-->
+            <!--<td>{{ question.question_level_2 }}</td>-->
+            <!--<td>{{ question.question_level_3 }}</td>-->
+            <!--<td>{{ question.question_level_4 }}</td>-->
+            <!--<td>{{ question.question_level_5 }}</td>-->
         </tr>
         <div class="form-group" aria-disabled="true">
             <div class="col-sm-offset-2 col-sm-10" aria-disabled="true">

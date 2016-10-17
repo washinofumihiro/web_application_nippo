@@ -1,6 +1,6 @@
 # from django.forms import ModelForm
 from django import forms
-from .models import Report, Impression, QuestionLevel
+from .models import Report, Impression, Question
 
 
 class ImpressionForm(forms.ModelForm):
@@ -21,10 +21,17 @@ class ReportForm(forms.ModelForm):
         # fields = ('date', 'title', 'user',)
 
 
-class QuestionLevelForm(forms.ModelForm):
+# class QuestionLevelForm(forms.ModelForm):
+#     class Meta:
+#         model = QuestionLevel
+#         fields = ('question_level_1', 'question_level_2', 'question_level_3', 'question_level_4', 'question_level_5')
+#
+
+class QuestionForm(forms.ModelForm):
     class Meta:
-        model = QuestionLevel
-        fields = ('question_level_1', 'question_level_2', 'question_level_3', 'question_level_4', 'question_level_5')
+        model = Question
+        fields = ('question_content',)
+        # fields = "__all__"
 
 
 class SearchForm(forms.Form):
