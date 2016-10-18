@@ -1,20 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Report, Impression, Question, AnswerQuestion
+from .models import Report, Question
 from .forms import ReportForm, ImpressionForm, QuestionForm, SearchForm, AnswerForm
-from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
-# from django.contrib.auth.models import Permission
-# from django.contrib.contenttypes.models import ContentType
-# from .forms import RegisterForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from datetime import datetime
-from django.forms.models import modelformset_factory
-from django.db.models import Q
-from django.db import IntegrityError
 from . import user_config
 from . import report_api
 from . import comment_api

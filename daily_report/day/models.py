@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.contrib.auth.models import User
-# from daily_report.daily_report import settings
-# from django.contrib.auth import get_user
-# from user_auth import settings
-# from calendar import timegm
-# from time import time
-from datetime import datetime
 
 
 class Report(models.Model):
