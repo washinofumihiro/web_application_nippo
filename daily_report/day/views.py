@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Report, Impression, Question, AnswerQuestion
 from .forms import ReportForm, ImpressionForm, QuestionForm, SearchForm, AnswerForm

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from .models import Report, Impression
 from django.contrib.auth import get_user
