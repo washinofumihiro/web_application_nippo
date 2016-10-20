@@ -5,28 +5,23 @@ from .forms import AnswerForm
 
 
 def list(question_id):
+    """
+    質問に対しての回答一覧を表示
+    :param question_id:
+    :return:
+    """
     answer = Question.objects.all().prefetch_related("answers").get(id=question_id).answers.all()
-    # print(answer.question_content)
     return answer
 
 
-# def show(question_id):
-#     if question_id:   # report_id が指定されている (修正時)
-#         # question = get_object_or_404(Question, pk=report_id)
-#         answer = AnswerQuestion.objects.all().prefetch_related("answers").get(id=question_id).answers.all()[0]
-#         # question = Question.abjects.get(id=report_id)
-#         # print(question.question_level_1)
-#     else:         # report_id が指定されていない (追加時)
-#         answer = AnswerQuestion()
-#
-#     return answer
 def show(answer_id):
+    """
+    編集または表示するための回答を選択
+    :param answer_id:
+    :return:
+    """
     if answer_id:   # report_id が指定されている (修正時)
-        # question = get_object_or_404(Question, pk=report_id)
-        # answer = AnswerQuestion.objects.all().prefetch_related("answers").get(id=question_id).answers.all()[0]
         answer = get_object_or_404(AnswerQuestion, pk=answer_id)
-        # question = Question.abjects.get(id=report_id)
-        # print(question.question_level_1)
     else:         # report_id が指定されていない (追加時)
         answer = AnswerQuestion()
 
@@ -34,9 +29,16 @@ def show(answer_id):
 
 
 def edit(post_data, answer, question_id):
+    """
+    回答の編集
+    :param post_data:
+    :param answer:
+    :param question_id:
+    :return:
+    """
     question = get_object_or_404(Question, pk=question_id)
-    form = AnswerForm(post_data, instance=answer)  # POST された request データからフォームを作成
-    if form.is_valid():  # フォームのバリデーション
+    form = AnswerForm(post_data, instance=answer)
+    if form.is_valid():
         answer = form.save(commit=False)
         answer.question = question
         answer.save()
