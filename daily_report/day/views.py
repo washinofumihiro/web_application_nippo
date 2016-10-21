@@ -14,7 +14,11 @@ from . import question_answer_api
 
 
 def create_user(request):
-    # POSTかGETか
+    """
+    ユーザの作成
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         # ユーザ作成、エラーがあった場合はエラーメッセージを入れる
         error_message = user_config.create_user(request.POST)
@@ -22,120 +26,108 @@ def create_user(request):
             return render(request, 'day/register.html', {'error_message': error_message})
         else:
             return redirect('/')
-    else:  # GET の時
+    else:
         return render_to_response('day/register.html', {},
                                   context_instance=RequestContext(request))
 
 
 @login_required
 def report_list(request):
+    """
+    日報のリストを表示
+    :param request:
+    :return:
+    """
     reports = report_api.list
     form = SearchForm()
     return render(request,
-                  'day/report_list.html',     # 使用するテンプレート
-                  {'reports': reports, 'form': form})         # テンプレートに渡すデータ
+                  'day/report_list.html',
+                  {'reports': reports, 'form': form})
 
 
 @login_required
 def report_edit(request, report_id=None):
-    # 日報の選択
+    """
+    日報と質問の新規追加と編集
+    :param request:
+    :param report_id:
+    :return:
+    """
     report = report_api.show(report_id, request.user.username)
     question = question_level_api.show(report_id)
-    # print(question.question_level_1)
-    # POSTかGETか
+
     if request.method == 'POST':
         report_form, report_id = report_api.edit(request.POST, report, request.user.username)
-        # # report_id = report_form.id
         question_form = question_level_api.edit(request.POST, question, report_id)
-        # # print(report_id)
+
         if report_form.is_valid():
-        # if report_form.is_valid() and question_form.is_valid():
             return redirect('day:report_list')
-    else:  # GET の時
-        report_form = ReportForm(instance=report)  # report インスタンスからフォームを作成
+    else:
+        report_form = ReportForm(instance=report)
         question_form = QuestionForm(instance=question)
 
-    # print(question_form.question_level_1)
-    # return render(request, 'day/report_edit.html', dict(report_form=report_form,
-    #                                                     question_form=question_form, report_id=report_id, question=question))
+    return render(request, 'day/report_edit.html',
+                  {'report_form': report_form, 'question_form': question_form,
+                   'report_id': report_id, 'question': question})
 
-    return render(request, 'day/report_edit.html', {'report_form': report_form,
-                                                        'question_form': question_form, 'report_id': report_id,
-                                                        'question': question})
-
-    # return render(request, 'day/report_edit.html', dict(report_form=report_form, report_id=report_id))
 
 @login_required
 def report_browse(request, report_id=None):
-
-    # 日報の選択
+    """
+    日報および質問の表示
+    :param request:
+    :param report_id:
+    :return:
+    """
     report = report_api.show(report_id, request.user.username)
     question = question_level_api.show(report_id)
 
-    # POSTかGETか
-    # if request.method == 'POST':
-    #     report_form, report_id = report_api.edit(request.POST, report, request.user.username)
-    #     question_form = question_level_api.edit(request.POST, question, report_id)
-    #     if report_form.is_valid() and question_form.is_valid():
-    #     # if report_form.is_valid():
-    #         return redirect('day:report_list')
-    # else:  # GET の時
-    #     report_form = ReportForm(instance=report)  # report インスタンスからフォームを作成
-    #     question_form = QuestionLevelForm(instance=question)
-
-    return render(request, 'day/report_browse.html', dict(report_form=report,
-                                                          question=question, report_id=report_id))
-    # return render(request, 'day/report_browse.html', dict(form=report_form, report_id=report_id))
-
-
-# @login_required
-# def report_browse(request, report_id=None):
-#     """書籍の編集"""
-# #     return HttpResponse('書籍の編集')
-#     if report_id:   # report_id が指定されている (修正時)
-#         report = get_object_or_404(Report, pk=report_id)
-#     else:         # report_id が指定されていない (追加時)
-#         report = Report()
-#
-#     if request.method == 'POST':
-#         form = ReportForm(request.POST, instance=report)  # POST された request データからフォームを作成
-#         if form.is_valid():    # フォームのバリデーション
-#             report = form.save(commit=False)
-#             report.save()
-#             return redirect('day:report_list')
-#     else:    # GET の時
-#         form = ReportForm(instance=report)  # report インスタンスからフォームを作成
-#
-#     return render(request, 'day/report_browse.html', dict(form=form, report_id=report_id))
+    return render(request, 'day/report_browse.html',
+                  dict(report_form=report, question=question, report_id=report_id))
 
 
 @login_required
 def report_del(request, report_id):
-    """書籍の削除"""
+    """
+    日報の削除
+    :param request:
+    :param report_id:
+    :return:
+    """
     report_api.delete(report_id)
     return redirect('day:report_list')
 
 
 def list_comment(request, report_id=None):
+    """
+    コメントの表示
+    :param request:
+    :param report_id:
+    :return:
+    """
     comment = comment_api.list(report_id)
     report = get_object_or_404(Report, pk=report_id)
     return render(request,
-                  'day/impression_list.html',  # 使用するテンプレート
+                  'day/impression_list.html',
                   {'impressions': comment, 'report': report, 'report_id' : report_id})
 
 
 @login_required
 def impression_edit(request, report_id, impression_id=None):
-    """感想の編集"""
-    # コメントが新規か編集かを選択
+    """
+    コメントの新規追加と編集
+    :param request:
+    :param report_id:
+    :param impression_id:
+    :return:
+    """
     comment = comment_api.show(impression_id, request.user.username)
     if request.method == 'POST':
         form = comment_api.edit(request.POST, comment, report_id)
-        # form = ImpressionForm(request.POST, instance=comment)  # POST された request データからフォームを作成
-        if form.is_valid():    # フォームのバリデーション
+        if form.is_valid():
             return redirect('day:impression_list', report_id=report_id)
-    else:    # GET の時
-        form = ImpressionForm(instance=comment)  # impression インスタンスからフォームを作成
+    else:
+        form = ImpressionForm(instance=comment)
 
     return render(request,
                   'day/impression_edit.html',
@@ -144,62 +136,82 @@ def impression_edit(request, report_id, impression_id=None):
 
 @login_required
 def impression_del(request, report_id, impression_id):
-    """感想の削除"""
+    """
+    コメントの削除
+    :param request:
+    :param report_id:
+    :param impression_id:
+    :return:
+    """
     comment_api.delete(impression_id)
     return redirect('day:impression_list', report_id=report_id)
 
 
 def list_all_question(request):
+    """
+    回答のない質問の一覧を表示
+    :param request:
+    :return:
+    """
     question = question_level_api.all_list()
 
     return render(request,
-                  'day/all_question.html',  # 使用するテンプレート
+                  'day/all_question.html',
                   {'question': question})
 
 
 def list_answer(request, report_id, question_id=None):
+    """
+    回答の一覧を表示
+    :param request:
+    :param report_id:
+    :param question_id:
+    :return:
+    """
     answer = question_answer_api.list(question_id)
     question = get_object_or_404(Question, pk=question_id)
     return render(request,
-                  'day/list_answer.html',  # 使用するテンプレート
+                  'day/list_answer.html',
                   {'answers': answer, 'question': question, 'question_id': question_id, 'report_id': report_id})
 
 
 @login_required
 def edit_answer(request, report_id, question_id, answer_id=None):
-    """感想の編集"""
-    # コメントが新規か編集かを選択
+    """
+    質問の編集
+    :param request:
+    :param report_id:
+    :param question_id:
+    :param answer_id:
+    :return:
+    """
     answer = question_answer_api.show(answer_id)
     if request.method == 'POST':
         form = question_answer_api.edit(request.POST, answer, question_id)
-        # form = ImpressionForm(request.POST, instance=comment)  # POST された request データからフォームを作成
-        if form.is_valid():    # フォームのバリデーション
-            # return redirect('day:list_answer', question_id=question_id)
-            # return redirect('day/report_browse.html', report_id=report_id, question_id=question_id)
+        if form.is_valid():
             return redirect('day:list_answer', question_id=question_id, report_id=report_id)
-    else:    # GET の時
-        form = AnswerForm(instance=answer)  # impression インスタンスからフォームを作成
+    else:
+        form = AnswerForm(instance=answer)
+
     return render(request,
                   'day/edit_answer.html',
                   dict(form=form, question_id=question_id, answer_id=answer_id, report_id=report_id))
 
 
-# @login_required
-# def del_answer(request, question_id, answer_id):
-#     """感想の削除"""
-#     question_answer_api.delete(answer_id)
-#     return redirect('day:answer_list', question_id=question_id)
-
-
-# 検索フォームの作成
 def report_search(request):
+    """
+    日報の検索
+    :param request:
+    :return:
+    """
     if request.method == 'GET':
         form = SearchForm(request.GET)
 
         if form.is_valid():
             keyword = form.cleaned_data['Search'].split()
-            # チェックボックスにチェックがある場合はキーワードから各カラムを検索
             target = request.GET.getlist('search_form')
+
+            # チェックボックスにチェックがある場合はキーワードから各カラムを検索
             if target:
                 reports = search_function.select(keyword, target)
 
@@ -209,16 +221,16 @@ def report_search(request):
 
             return render(request,
                           'day/report_list.html',
-                          {'reports': reports, 'form': form, 'word': request.GET['Search']})         # テンプレートに渡すデータ
+                          {'reports': reports, 'form': form, 'word': request.GET['Search']})
 
         else:   # 入力がない場合
             reports = Report.objects.all().order_by('id')
             return render(request,
                           'day/report_list.html',
-                          {'reports': reports, 'form': form})  # テンプレートに渡すデータ
+                          {'reports': reports, 'form': form})
 
     else:  # 検索フォームを押さない場合
         reports = Report.objects.all().order_by('id')
         return render(request,
                       'day/report_list.html',
-                      {'reports': reports})  # テンプレートに渡すデータ
+                      {'reports': reports})
