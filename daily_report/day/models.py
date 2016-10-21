@@ -17,9 +17,9 @@ class Report(models.Model):
         return self.name
 
 
-class Impression(models.Model):
+class Comment(models.Model):
     """コメントのモデル"""
-    report = models.ForeignKey(Report, verbose_name='日報', related_name='impressions')
+    report = models.ForeignKey(Report, verbose_name='日報', related_name='comments')
     comment = models.TextField('コメント', blank=True)
     comment_user = models.CharField('コメント投稿者', max_length=255)
     comment_time = models.CharField('コメント時間', max_length=255)

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from .models import Report, Impression, Question, AnswerQuestion
+from .models import Report, Comment, Question, AnswerQuestion
 
 
-class ImpressionForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     """コメントのフォーム"""
     class Meta:
-        model = Impression
+        model = Comment
         fields = ('comment_user', 'comment',)
 
 

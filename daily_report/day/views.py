@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Report, Question
-from .forms import ReportForm, ImpressionForm, QuestionForm, SearchForm, AnswerForm
+from .forms import ReportForm, CommentForm, QuestionForm, SearchForm, AnswerForm
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -38,7 +38,7 @@ def report_list(request):
     :param request:
     :return:
     """
-    reports = report_api.list
+    reports = report_api.listup
     form = SearchForm()
     return render(request,
                   'day/report_list.html',
@@ -53,8 +53,8 @@ def report_edit(request, report_id=None):
     :param report_id:
     :return:
     """
-    report = report_api.show(report_id, request.user.username)
-    question = question_level_api.show(report_id)
+    report = report_api.select(report_id, request.user.username)
+    question = question_level_api.select(report_id)
 
     if request.method == 'POST':
         report_form, report_id = report_api.edit(request.POST, report, request.user.username)
@@ -79,8 +79,8 @@ def report_browse(request, report_id=None):
     :param report_id:
     :return:
     """
-    report = report_api.show(report_id, request.user.username)
-    question = question_level_api.show(report_id)
+    report = report_api.select(report_id, request.user.username)
+    question = question_level_api.select(report_id)
 
     return render(request, 'day/report_browse.html',
                   dict(report_form=report, question=question, report_id=report_id))
@@ -105,46 +105,46 @@ def list_comment(request, report_id=None):
     :param report_id:
     :return:
     """
-    comment = comment_api.list(report_id)
+    comment = comment_api.listup(report_id)
     report = get_object_or_404(Report, pk=report_id)
     return render(request,
-                  'day/impression_list.html',
-                  {'impressions': comment, 'report': report, 'report_id' : report_id})
+                  'day/comment_list.html',
+                  {'comments': comment, 'report': report, 'report_id': report_id})
 
 
 @login_required
-def impression_edit(request, report_id, impression_id=None):
+def comment_edit(request, report_id, comment_id=None):
     """
     コメントの新規追加と編集
     :param request:
     :param report_id:
-    :param impression_id:
+    :param comment_id:
     :return:
     """
-    comment = comment_api.show(impression_id, request.user.username)
+    comment = comment_api.select(comment_id, request.user.username)
     if request.method == 'POST':
         form = comment_api.edit(request.POST, comment, report_id)
         if form.is_valid():
-            return redirect('day:impression_list', report_id=report_id)
+            return redirect('day:comment_list', report_id=report_id)
     else:
-        form = ImpressionForm(instance=comment)
+        form = CommentForm(instance=comment)
 
     return render(request,
-                  'day/impression_edit.html',
-                  dict(form=form, report_id=report_id, impression_id=impression_id))
+                  'day/comment_edit.html',
+                  dict(form=form, report_id=report_id, comment_id=comment_id))
 
 
 @login_required
-def impression_del(request, report_id, impression_id):
+def comment_del(request, report_id, comment_id):
     """
     コメントの削除
     :param request:
     :param report_id:
-    :param impression_id:
+    :param comment_id:
     :return:
     """
-    comment_api.delete(impression_id)
-    return redirect('day:impression_list', report_id=report_id)
+    comment_api.delete(comment_id)
+    return redirect('day:comment_list', report_id=report_id)
 
 
 def list_all_question(request):
@@ -153,7 +153,7 @@ def list_all_question(request):
     :param request:
     :return:
     """
-    question = question_level_api.all_list()
+    question = question_level_api.listup_all()
 
     return render(request,
                   'day/all_question.html',
@@ -168,7 +168,7 @@ def list_answer(request, report_id, question_id=None):
     :param question_id:
     :return:
     """
-    answer = question_answer_api.list(question_id)
+    answer = question_answer_api.listup(question_id)
     question = get_object_or_404(Question, pk=question_id)
     return render(request,
                   'day/list_answer.html',
@@ -185,7 +185,7 @@ def edit_answer(request, report_id, question_id, answer_id=None):
     :param answer_id:
     :return:
     """
-    answer = question_answer_api.show(answer_id)
+    answer = question_answer_api.select(answer_id)
     if request.method == 'POST':
         form = question_answer_api.edit(request.POST, answer, question_id)
         if form.is_valid():

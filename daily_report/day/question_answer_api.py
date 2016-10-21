@@ -4,7 +4,7 @@ from .models import Question, AnswerQuestion
 from .forms import AnswerForm
 
 
-def list(question_id):
+def listup(question_id):
     """
     質問に対しての回答一覧を表示
     :param question_id:
@@ -14,7 +14,7 @@ def list(question_id):
     return answer
 
 
-def show(answer_id):
+def select(answer_id):
     """
     編集または表示するための回答を選択
     :param answer_id:

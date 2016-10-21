@@ -5,7 +5,7 @@ from .forms import QuestionForm
 from django.db.models import Q
 
 
-def list(report_id):
+def listup(report_id):
     """
     質問一覧を表示
     :param report_id:
@@ -16,7 +16,7 @@ def list(report_id):
     return comment
 
 
-def show(report_id):
+def select(report_id):
     """
     編集または表示する質問を選択
     :param report_id:
@@ -48,7 +48,7 @@ def edit(post_data, question, report_id):
     return form
 
 
-def all_list():
+def listup_all():
     """
     回答が返ってきていない質問の一覧を表示
     :return:

@@ -7,10 +7,10 @@
 
 {% block content %}
     <h3 class="page-header">感想の編集</h3>
-    {% if impression_id %}
-    <form action="{% url 'day:impression_mod' report_id=report_id impression_id=impression_id %}" method="post" class="form-horizontal" role="form">
+    {% if comment_id %}
+    <form action="{% url 'day:comment_mod' report_id=report_id comment_id=comment_id %}" method="post" class="form-horizontal" role="form">
     {% else %}
-    <form action="{% url 'day:impression_add' report_id=report_id %}" method="post" class="form-horizontal" role="form">
+    <form action="{% url 'day:comment_add' report_id=report_id %}" method="post" class="form-horizontal" role="form">
     {% endif %}
       {% csrf_token %}
       {{ form|bootstrap_horizontal }}
@@ -21,7 +21,7 @@
         </div>
       </div>
     </form>
-    <a href="{% url 'day:impression_list' report_id=report_id %}" class="btn btn-default btn-sm">戻る</a>
+    <a href="{% url 'day:comment_list' report_id=report_id %}" class="btn btn-default btn-sm">戻る</a>
 {% endblock content %}
 
 <!--<!DOCTYPE html>-->

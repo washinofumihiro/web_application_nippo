@@ -30,7 +30,7 @@ table {
           <td style="overflow : visible;">{{ report.publisher }}</td>
           <td>{{ report.page }}</td>
           <td>
-            <a href="{% url 'day:impression_list' report_id=report.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
+            <a href="{% url 'day:comment_list' report_id=report.id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
           </td>
         </tr>
         {% endfor %}

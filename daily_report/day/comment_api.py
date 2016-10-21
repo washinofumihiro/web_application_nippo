@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Report, Impression
-from .forms import ImpressionForm
+from .models import Report, Comment
+from .forms import CommentForm
 from datetime import datetime
 
 
-def list(report_id):
+def listup(report_id):
     """
     コメント一覧の表示
     :param report_id:
@@ -15,7 +15,7 @@ def list(report_id):
     return comment
 
 
-def show(comment_id, login_user):
+def select(comment_id, login_user):
     """
     編集または表示するコメントを選択
     :param comment_id:
@@ -23,9 +23,9 @@ def show(comment_id, login_user):
     :return:
     """
     if comment_id:   # report_id が指定されている (修正時)
-        comment = get_object_or_404(Impression, pk=comment_id)
+        comment = get_object_or_404(Comment, pk=comment_id)
     else:         # report_id が指定されていない (追加時)
-        comment = Impression()
+        comment = Comment()
         comment.comment_user = login_user
 
     return comment
@@ -41,7 +41,7 @@ def edit(post_data, comment, report_id):
     """
     date_object = datetime.now()
     report = get_object_or_404(Report, pk=report_id)
-    form = ImpressionForm(post_data, instance=comment)
+    form = CommentForm(post_data, instance=comment)
     if form.is_valid():
         comment = form.save(commit=False)
         comment.report = report
@@ -56,5 +56,5 @@ def delete(comment_id):
     :param comment_id:
     :return:
     """
-    comment = get_object_or_404(Impression, pk=comment_id)
+    comment = get_object_or_404(Comment, pk=comment_id)
     comment.delete()

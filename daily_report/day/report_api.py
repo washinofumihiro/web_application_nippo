@@ -4,17 +4,16 @@ from .models import Report
 from .forms import ReportForm
 
 
-def list():
+def listup():
     """
     日報の一覧表示
     :return:
     """
     reports = Report.objects.all().order_by('id')
-    # print(reports.title)
     return reports
 
 
-def show(report_id, login_user):
+def select(report_id, login_user):
     """
     編集または表示するための日報を選択
     :param report_id:
