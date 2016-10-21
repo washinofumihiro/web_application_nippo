@@ -62,7 +62,7 @@ def all_list():
         count_answer = AnswerQuestion.objects\
             .filter(question_id=question_id['id']).count()
 
-        if count_answer != 0:
+        if count_answer == 0:
             query_list.append(question_id['id'])
 
     # 取り出したidを元に回答なしの質問を選択する
