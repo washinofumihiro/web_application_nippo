@@ -6,16 +6,25 @@ from django.db.models import Q
 
 
 def list(report_id):
-    comment = Report.objects.all().prefetch_related("impressions").get(id=report_id).impressions.all()
+    """
+    質問一覧を表示
+    :param report_id:
+    :return:
+    """
+    comment = Report.objects.all().prefetch_related("impressions")\
+        .get(id=report_id).impressions.all()
     return comment
 
 
 def show(report_id):
+    """
+    編集または表示する質問を選択
+    :param report_id:
+    :return:
+    """
     if report_id:   # report_id が指定されている (修正時)
-        # question = get_object_or_404(QuestionLevel, pk=report_id)
-        question = Report.objects.all().prefetch_related("questions").get(id=report_id).questions.all()[0]
-        # question = QuestionLevel.abjects.get(id=report_id)
-        # print(question.question_level_1)
+        question = Report.objects.all().prefetch_related("questions")\
+            .get(id=report_id).questions.all()[0]
     else:         # report_id が指定されていない (追加時)
         question = Question()
 
@@ -23,9 +32,16 @@ def show(report_id):
 
 
 def edit(post_data, question, report_id):
+    """
+    質問の編集
+    :param post_data:
+    :param question:
+    :param report_id:
+    :return:
+    """
     report = get_object_or_404(Report, pk=report_id)
-    form = QuestionForm(post_data, instance=question)  # POST された request データからフォームを作成
-    if form.is_valid():  # フォームのバリデーション
+    form = QuestionForm(post_data, instance=question)
+    if form.is_valid():
         question = form.save(commit=False)
         question.report = report
         question.save()
@@ -33,38 +49,23 @@ def edit(post_data, question, report_id):
 
 
 def all_list():
+    """
+    回答が返ってきていない質問の一覧を表示
+    :return:
+    """
     question = Question.objects.all()
-    # question = Question.objects.all().prefetch_related("answers").all().answers.all()
-    # query = question[0].id
-    # print(query)
-    # answer = Question.objects.all().prefetch_related("answers").filter(id=True).answers.all()
-    print(AnswerQuestion.objects.all().values())
-
-    print(AnswerQuestion.objects.all().count())
-    # print(AnswerQuestion.objects.filter(question_id=).order_by('answer'))
-    # print(AnswerQuestion.objects.all().values())
-    print("aaaa")
-    # print(question[0].report_id)
-    print(question.values())
-
-    val_id = question.values('id')
-    # print(val_id)
-    # print(AnswerQuestion.objects.filter(question_id=val_id).count())
-
+    question_id_all = question.values('id')
     query_list = []
-    for val in val_id:
-       # print(val.values())
-        count_answer = AnswerQuestion.objects.filter(question_id=val['id']).count()
+
+    # 回答が返ってきていない質問のidを取り出す
+    for question_id in question_id_all:
+        count_answer = AnswerQuestion.objects\
+            .filter(question_id=question_id['id']).count()
+
         if count_answer != 0:
-            query_list.append(val['id'])
-        # print(count_answer)
-        # [k for k, v in count_answer.values() if v != 0]
+            query_list.append(question_id['id'])
 
-    print(query_list)
-    print(question.values('id'))
-
-
-
+    # 取り出したidを元に回答なしの質問を選択する
     query = Q()
     queries = [Q(id=word) for word in query_list]
     for item in queries:
@@ -72,6 +73,4 @@ def all_list():
 
     question = Question.objects.filter(query).order_by('id')
 
-    # print(Question.objects.all().values())
-    # print(answer.values())
     return question
