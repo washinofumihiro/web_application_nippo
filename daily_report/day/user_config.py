@@ -4,6 +4,11 @@ from django.db import IntegrityError
 
 
 def create_user(request):
+    """
+    ユーザの作成
+    :param request:
+    :return:
+    """
     user_id = request['user_id']
     password = request['password']
     mail_address = request['mail_address']
@@ -26,4 +31,3 @@ def create_user(request):
     except IntegrityError:
         error_message = 'すでに存在しているUser IDです。別のUser IDに変更してください。'
         return error_message
-
