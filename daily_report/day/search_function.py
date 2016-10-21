@@ -4,7 +4,12 @@ from django.db.models import Q
 
 
 def select(keyword, target):
-    # チェックボックスにチェックがある場合はキーワードから各カラムを検索
+    """
+    チェックボックスにチェックがある場合はキーワードから各カラムを検索
+    :param keyword:
+    :param target:
+    :return:
+    """
     query = Q()
     for data in target:
         if data == 'post_time':
@@ -37,7 +42,12 @@ def select(keyword, target):
     return reports
 
 
-def all(keyword):    # チェックボックスにチェックがない場合はキーワードからDB内全検索
+def all(keyword):
+    """
+    チェックボックスにチェックがない場合はキーワードからDB内全検索
+    :param keyword:
+    :return:
+    """
     queries1 = [Q(post_time__icontains=word) for word in keyword]
     queries2 = [Q(user__icontains=word) for word in keyword]
     queries3 = [Q(title__icontains=word) for word in keyword]
