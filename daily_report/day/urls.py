@@ -19,6 +19,4 @@ urlpatterns = [
     url(r'^report/answer/add/(?P<report_id>\d+)/(?P<question_id>\d+)/$', views.edit_answer, name='add_answer'),  # 登録
     url(r'^report/answer/mod/(?P<report_id>\d+)/(?P<question_id>\d+)/(?P<answer_id>\d+)/$', views.edit_answer, name='mod_answer'),
     url(r'^report/question/$', views.list_all_question, name='all_question'),
-    # url(r'^impression/del/(?P<report_id>\d+)/(?P<impression_id>\d+)/$', views.impression_del, name='impression_del'),
 ]
-
