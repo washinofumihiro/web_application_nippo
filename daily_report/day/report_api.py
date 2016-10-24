@@ -38,12 +38,13 @@ def edit(post_data, report, login_user):
     :return:
     """
     form = ReportForm(post_data, instance=report)
-    report_id = report.id
 
     if form.is_valid():
         report = form.save(commit=False)
         report.save()
 
+    report_id = report.id
+    
     return form, report_id
 
 
