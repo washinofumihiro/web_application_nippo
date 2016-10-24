@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block extrahead %}
+<script src="/static/js/question_point_color.js"></script>
+{% endblock %}
+
+{% block title %}日報の編集{% endblock title %}
+
+{% block content %}
+    <h3 class="page-header">日報の追加</h3>
+    {% if report_id %}
+    <form action="{% url 'day:edit_report' report_id=report_id %}" method="post" class="form-horizontal" role="form">
+    {% else %}
+    <form action="{% url 'day:create_report' %}" method="post" class="form-horizontal" role="form">
+    {% endif %}
+    <input id="level_1" type="button" value="level1" onclick="select_question(this)">
+        {% csrf_token %}
+        {{ report_form|bootstrap_horizontal }}
+        {{ question_form|bootstrap_horizontal }}
+        <tr>
+            <td>{{ question.question_content }}</td>
+        </tr>
+        <div class="form-group" aria-disabled="true">
+            <div class="col-sm-offset-2 col-sm-10" aria-disabled="true">
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </form>
+    <a href="{% url 'day:list_report' %}" class="btn btn-default btn-sm">戻る</a>
+{% endblock content %}

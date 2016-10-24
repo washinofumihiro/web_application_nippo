@@ -32,7 +32,7 @@ def create_user(request):
 
 
 @login_required
-def report_list(request):
+def list_report(request):
     """
     日報のリストを表示
     :param request:
@@ -41,12 +41,12 @@ def report_list(request):
     reports = report_api.listup
     form = SearchForm()
     return render(request,
-                  'day/report_list.html',
+                  'day/list_report.html',
                   {'reports': reports, 'form': form})
 
 
 @login_required
-def report_edit(request, report_id=None):
+def edit_report(request, report_id=None):
     """
     日報と質問の新規追加と編集
     :param request:
@@ -61,18 +61,18 @@ def report_edit(request, report_id=None):
         question_form = question_level_api.edit(request.POST, question, report_id)
 
         if report_form.is_valid():
-            return redirect('day:report_list')
+            return redirect('day:list_report')
     else:
         report_form = ReportForm(instance=report)
         question_form = QuestionForm(instance=question)
 
-    return render(request, 'day/report_edit.html',
+    return render(request, 'day/edit_report.html',
                   {'report_form': report_form, 'question_form': question_form,
                    'report_id': report_id, 'question': question})
 
 
 @login_required
-def report_browse(request, report_id=None):
+def browse_report(request, report_id=None):
     """
     日報および質問の表示
     :param request:
@@ -82,12 +82,12 @@ def report_browse(request, report_id=None):
     report = report_api.select(report_id, request.user.username)
     question = question_level_api.select(report_id)
 
-    return render(request, 'day/report_browse.html',
+    return render(request, 'day/browse_report.html',
                   dict(report_form=report, question=question, report_id=report_id))
 
 
 @login_required
-def report_del(request, report_id):
+def delete_report(request, report_id):
     """
     日報の削除
     :param request:
@@ -95,7 +95,7 @@ def report_del(request, report_id):
     :return:
     """
     report_api.delete(report_id)
-    return redirect('day:report_list')
+    return redirect('day:list_report')
 
 
 def list_comment(request, report_id=None):
@@ -108,12 +108,12 @@ def list_comment(request, report_id=None):
     comment = comment_api.listup(report_id)
     report = get_object_or_404(Report, pk=report_id)
     return render(request,
-                  'day/comment_list.html',
+                  'day/list_comment.html',
                   {'comments': comment, 'report': report, 'report_id': report_id})
 
 
 @login_required
-def comment_edit(request, report_id, comment_id=None):
+def edit_comment(request, report_id, comment_id=None):
     """
     コメントの新規追加と編集
     :param request:
@@ -125,17 +125,17 @@ def comment_edit(request, report_id, comment_id=None):
     if request.method == 'POST':
         form = comment_api.edit(request.POST, comment, report_id)
         if form.is_valid():
-            return redirect('day:comment_list', report_id=report_id)
+            return redirect('day:list_comment', report_id=report_id)
     else:
         form = CommentForm(instance=comment)
 
     return render(request,
-                  'day/comment_edit.html',
+                  'day/edit_comment.html',
                   dict(form=form, report_id=report_id, comment_id=comment_id))
 
 
 @login_required
-def comment_del(request, report_id, comment_id):
+def delete_comment(request, report_id, comment_id):
     """
     コメントの削除
     :param request:
@@ -144,7 +144,7 @@ def comment_del(request, report_id, comment_id):
     :return:
     """
     comment_api.delete(comment_id)
-    return redirect('day:comment_list', report_id=report_id)
+    return redirect('day:list_comment', report_id=report_id)
 
 
 def list_all_question(request):
@@ -198,7 +198,7 @@ def edit_answer(request, report_id, question_id, answer_id=None):
                   dict(form=form, question_id=question_id, answer_id=answer_id, report_id=report_id))
 
 
-def report_search(request):
+def search_report(request):
     """
     日報の検索
     :param request:
@@ -220,17 +220,17 @@ def report_search(request):
                 reports = search_function.all(keyword)
 
             return render(request,
-                          'day/report_list.html',
+                          'day/list_report.html',
                           {'reports': reports, 'form': form, 'word': request.GET['Search']})
 
         else:   # 入力がない場合
             reports = Report.objects.all().order_by('id')
             return render(request,
-                          'day/report_list.html',
+                          'day/list_report.html',
                           {'reports': reports, 'form': form})
 
     else:  # 検索フォームを押さない場合
         reports = Report.objects.all().order_by('id')
         return render(request,
-                      'day/report_list.html',
+                      'day/list_report.html',
                       {'reports': reports})

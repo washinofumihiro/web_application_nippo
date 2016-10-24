@@ -44,7 +44,7 @@ def edit(post_data, report, login_user):
         report.save()
 
     report_id = report.id
-    
+
     return form, report_id
 
 

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}日報一覧{% endblock title %}
+
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+</style>
+<script src="/static/js/question_point_color.js"></script>
+{% endblock %}
+
+
+{% block content %}
+    <h3 class="user-header">日報一覧</h3>
+    {% if word %}
+        <a href="{% url 'day:list_report' %}" class="btn btn-default btn-sm">戻る</a>
+    {% endif %}
+        <div class="row">
+        {% for report in reports %}
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>{{ report.title }}</h3>
+                        <p class="glyphicon glyphicon-user">{{ report.user }}</p>
+                        <p>{{report.post_time}}</p>
+                    </div>
+                    <p>
+                        {% if report.user == request.user.username %}
+                        <script>
+                            document.write('<a href="{% url 'day:edit_report' report_id=report.id %}" class="btn btn-default btn-sm">修正</a>');
+                            document.write('<a href="{% url 'day:delete_report' report_id=report.id %}" class="btn btn-default btn-sm">削除</a>');
+                        </script>
+                        {% endif %}
+                        <a href="{% url 'day:browse_report' report_id=report.id %}" class="btn btn-default btn-sm">閲覧</a>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+{% endblock content %}

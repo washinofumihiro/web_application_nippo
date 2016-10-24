@@ -21,7 +21,7 @@ table {
 
 {% block content %}
     <h3 class="page-header">感想の一覧 </h3>
-    <a href="{% url 'day:add_answer' report_id=report_id question_id=question_id %}" class="btn btn-default btn-sm">追加</a>
+    <a href="{% url 'day:create_answer' report_id=report_id question_id=question_id %}" class="btn btn-default btn-sm">追加</a>
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -36,14 +36,14 @@ table {
             <td>{{ answer.id }}</td>
             <td>{{ answer.answer}}</td>
             <td>
-                <a href="{% url 'day:mod_answer' report_id=report_id question_id=question_id answer_id=answer.id %}" class="btn btn-default btn-sm">修正</a>
+                <a href="{% url 'day:edit_answer' report_id=report_id question_id=question_id answer_id=answer.id %}" class="btn btn-default btn-sm">修正</a>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     <div>
-      <a href="{% url 'day:report_browse' report_id=report_id %}" class="btn btn-default btn-sm">戻る</a>
+      <a href="{% url 'day:browse_report' report_id=report_id %}" class="btn btn-default btn-sm">戻る</a>
     </div>
 
     {# 削除を確認するモーダル ダイアログ #}
@@ -65,14 +65,3 @@ table {
   </div>
 </div>
 {% endblock content %}
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-    <!--<meta charset="UTF-8">-->
-    <!--<title>Title</title>-->
-<!--</head>-->
-<!--<body>-->
-
-<!--</body>-->
-<!--</html>-->

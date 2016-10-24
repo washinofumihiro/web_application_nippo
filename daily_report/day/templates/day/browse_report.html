@@ -1,0 +1,83 @@
+
+
+
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}内容確認{% endblock title %}
+
+{% block content %}
+    <h3 class="page-header">日報の内容</h3>
+    {% if report_id %}
+    <form action="{% url 'day:edit_report' report_id=report_id %}" method="post" class="form-horizontal" role="form">
+
+    {% else %}
+    <form action="{% url 'day:create_report' %}" method="post" class="form-horizontal" role="form">
+    {% endif %}
+      {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>投稿者</h3>
+                        <p>{{ report_form.user }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>投稿時間</h3>
+                        <p>{{ report_form.post_time}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>タイトル</h3>
+                        <p>{{ report_form.title }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>やったこと(Y)</h3>
+                        <p>{{ report_form.content_Y }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>わかったこと(W)</h3>
+                        <p>{{ report_form.content_W }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>次にすること(T)</h3>
+                        <p>{{ report_form.content_T }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>質問レベル1</h3>
+                        <p>{{ question.question_content }}</p>
+                        <p>
+                            <a href="{% url 'day:create_answer' question_id=question.id  report_id=report_id%}" class="btn btn-default btn-sm btn-primary">回答する</a>
+                            <a href="{% url 'day:list_answer' question_id=question.id  report_id=report_id%}" class="btn btn-default btn-sm btn-primary">回答一覧</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <a href="{% url 'day:list_comment' report_id=report_id %}" class="btn btn-default btn-sm btn-primary">感想の一覧</a>
+    <a href="{% url 'day:list_report' %}" class="btn btn-default btn-sm">戻る</a>
+{% endblock content %}
