@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
-from .models import Report, Question, AnswerQuestion
-from .forms import QuestionForm
 from django.db.models import Q
+
+from ..models import Report, Question, AnswerQuestion
+from ..forms import QuestionForm
 
 
 def listup(report_id):

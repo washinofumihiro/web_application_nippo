@@ -3,15 +3,18 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from . import comment_api
-from . import question_answer_api
-from . import question_level_api
-from . import report_api
-from . import search_function
-from . import user_config
-from .forms import ReportForm, CommentForm,\
-    QuestionForm, SearchForm, AnswerForm
+
 from .models import Report, Question
+from .forms import (ReportForm,
+                    CommentForm,
+                    QuestionForm,
+                    SearchForm, AnswerForm)
+from .logic import (comment_api,
+                    question_answer_api,
+                    question_level_api,
+                    report_api,
+                    search_function,
+                    user_config)
 
 
 def create_user(request):

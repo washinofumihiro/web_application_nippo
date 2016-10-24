@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
-from .models import Question, AnswerQuestion
-from .forms import AnswerForm
+
+from ..models import Question, AnswerQuestion
+from ..forms import AnswerForm
 
 
 def listup(question_id):

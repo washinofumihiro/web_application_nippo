@@ -2,5 +2,6 @@
 daily_report/.idea/*
 daily_report/daily_report/__pycache__/*
 daily_report/day/__pycache__/*
+daily_report/day/logic/__pycache__/*
 daily_report/day/migrations/__pycache__/*
 daily_report/daily_report/database.py

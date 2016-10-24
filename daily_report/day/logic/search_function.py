@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from .models import Report
 from django.db.models import Q
+
+from ..models import Report
 
 
 def select(keyword, target):
