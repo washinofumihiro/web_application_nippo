@@ -82,8 +82,8 @@ password_key = os.environ.get("passkey")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': database.name,
-        'USER': database.user,
+        'NAME': database.database_name,
+        'USER': database.username,
         'PASSWORD': database.password,
         'HOST': database.host,
         'PORT': database.port,
