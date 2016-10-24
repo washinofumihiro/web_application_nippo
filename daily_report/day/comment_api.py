@@ -11,7 +11,8 @@ def listup(report_id):
     :param report_id:
     :return:
     """
-    comment = Report.objects.all().prefetch_related("comments").get(id=report_id).comments.all()
+    comment = Report.objects.all().prefetch_related("comments")\
+        .get(id=report_id).comments.all()
     return comment
 
 

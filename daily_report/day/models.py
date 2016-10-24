@@ -19,7 +19,8 @@ class Report(models.Model):
 
 class Comment(models.Model):
     """コメントのモデル"""
-    report = models.ForeignKey(Report, verbose_name='日報', related_name='comments')
+    report = models.ForeignKey(Report,
+                               verbose_name='日報', related_name='comments')
     comment = models.TextField('コメント', blank=True)
     comment_user = models.CharField('コメント投稿者', max_length=255)
     comment_time = models.CharField('コメント時間', max_length=255)
@@ -30,7 +31,8 @@ class Comment(models.Model):
 
 class Question(models.Model):
     """質問のモデル"""
-    report = models.ForeignKey(Report, verbose_name='日報', related_name='questions')
+    report = models.ForeignKey(Report,
+                               verbose_name='日報', related_name='questions')
     question_content = models.TextField('質問内容', blank=True)
 
     def __str__(self):
@@ -39,7 +41,8 @@ class Question(models.Model):
 
 class AnswerQuestion(models.Model):
     """質問に対しての回答のフォーム"""
-    question = models.ForeignKey(Question, verbose_name='質問', related_name='answers')
+    question = models.ForeignKey(Question,
+                                 verbose_name='質問', related_name='answers')
     answer = models.TextField('質問に対しての回答', blank=True)
 
     def __str__(self):

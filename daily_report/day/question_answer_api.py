@@ -10,7 +10,8 @@ def listup(question_id):
     :param question_id:
     :return:
     """
-    answer = Question.objects.all().prefetch_related("answers").get(id=question_id).answers.all()
+    answer = Question.objects.all().prefetch_related("answers")\
+        .get(id=question_id).answers.all()
     return answer
 
 

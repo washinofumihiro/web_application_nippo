@@ -9,7 +9,8 @@ from . import question_level_api
 from . import report_api
 from . import search_function
 from . import user_config
-from .forms import ReportForm, CommentForm, QuestionForm, SearchForm, AnswerForm
+from .forms import ReportForm, CommentForm,\
+    QuestionForm, SearchForm, AnswerForm
 from .models import Report, Question
 
 
@@ -23,7 +24,8 @@ def create_user(request):
         # ユーザ作成、エラーがあった場合はエラーメッセージを入れる
         error_message = user_config.create_user(request.POST)
         if error_message:
-            return render(request, 'day/register.html', {'error_message': error_message})
+            return render(request, 'day/register.html',
+                          {'error_message': error_message})
         else:
             return redirect('/')
     else:
@@ -57,8 +59,10 @@ def edit_report(request, report_id=None):
     question = question_level_api.select(report_id)
 
     if request.method == 'POST':
-        report_form, report_id = report_api.edit(request.POST, report, request.user.username)
-        question_form = question_level_api.edit(request.POST, question, report_id)
+        report_form, report_id = report_api.edit(request.POST,
+                                                 report, request.user.username)
+        question_form = question_level_api.edit(request.POST,
+                                                question, report_id)
 
         if report_form.is_valid():
             return redirect('day:list_report')
@@ -83,7 +87,8 @@ def browse_report(request, report_id=None):
     question = question_level_api.select(report_id)
 
     return render(request, 'day/browse_report.html',
-                  dict(report_form=report, question=question, report_id=report_id))
+                  dict(report_form=report,
+                       question=question, report_id=report_id))
 
 
 @login_required
@@ -109,7 +114,8 @@ def list_comment(request, report_id=None):
     report = get_object_or_404(Report, pk=report_id)
     return render(request,
                   'day/list_comment.html',
-                  {'comments': comment, 'report': report, 'report_id': report_id})
+                  {'comments': comment,
+                   'report': report, 'report_id': report_id})
 
 
 @login_required
@@ -172,7 +178,8 @@ def list_answer(request, report_id, question_id=None):
     question = get_object_or_404(Question, pk=question_id)
     return render(request,
                   'day/list_answer.html',
-                  {'answers': answer, 'question': question, 'question_id': question_id, 'report_id': report_id})
+                  {'answers': answer, 'question': question,
+                   'question_id': question_id, 'report_id': report_id})
 
 
 @login_required
@@ -189,13 +196,15 @@ def edit_answer(request, report_id, question_id, answer_id=None):
     if request.method == 'POST':
         form = question_answer_api.edit(request.POST, answer, question_id)
         if form.is_valid():
-            return redirect('day:list_answer', question_id=question_id, report_id=report_id)
+            return redirect('day:list_answer',
+                            question_id=question_id, report_id=report_id)
     else:
         form = AnswerForm(instance=answer)
 
     return render(request,
                   'day/edit_answer.html',
-                  dict(form=form, question_id=question_id, answer_id=answer_id, report_id=report_id))
+                  dict(form=form, question_id=question_id,
+                       answer_id=answer_id, report_id=report_id))
 
 
 def search_report(request):
@@ -221,7 +230,8 @@ def search_report(request):
 
             return render(request,
                           'day/list_report.html',
-                          {'reports': reports, 'form': form, 'word': request.GET['Search']})
+                          {'reports': reports,
+                           'form': form, 'word': request.GET['Search']})
 
         else:   # 入力がない場合
             reports = Report.objects.all().order_by('id')
