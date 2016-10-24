@@ -21,7 +21,7 @@ table {
         {% for report in reports %}
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <div class="caption">
+                    <div class="caption" style="overflow: hidden;">
                         <h3>{{ report.title }}</h3>
                         <p class="glyphicon glyphicon-user">{{ report.user }}</p>
                         <p>{{report.post_time}}</p>

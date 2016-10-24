@@ -34,7 +34,7 @@ table {
         {% for answer in answers %}
         <tr>
             <td>{{ answer.id }}</td>
-            <td>{{ answer.answer}}</td>
+            <td  style="word-break:break-all;">{{ answer.answer}}</td>
             <td>
                 <a href="{% url 'day:edit_answer' report_id=report_id question_id=question_id answer_id=answer.id %}" class="btn btn-default btn-sm">修正</a>
           </td>
